@@ -1,6 +1,6 @@
 //
 // Cpu.java
-// manque daa, ld_nn_a, jmp
+// manque daa, ld_nn_a
 //
 package JavaGB.cpu;
 
@@ -673,7 +673,7 @@ class Cpu{
         clock=3;
     }
 
-    /* rotate/shift commands */ // à finir !!!!
+    /* rotate/shift commands */
     //RLC r
     public void RLC_a(){
         int result = (_r.getA() << 1)  + (_r.getA >> 7);
@@ -1241,7 +1241,7 @@ class Cpu{
     public void DI(){_r.setIME(false);}
     public void EI(){_r.setIME(true);}
 
-    /* Jump commands */ //à finir !!!!
+    /* Jump commands */
     public void JP_PC(){
         int result = _r.getPC();
         _r.incrementPC();
@@ -1250,15 +1250,128 @@ class Cpu{
         _r.incrementPC();
         clock=4;
     }
-    public void JP_HL(){ _r.setPC(_r.getHL()); }
-    public void JP_fPC(){}
-    public void JR(){}
-    public void JR(){}
-    public void Call_PC(){}
-    public void Call_FPC(){}
-    public void RET(){}
-    public void RET_F(){}
-    public void RETI(){}
-    public void RST(){}
+    public void JP_HL(){ _r.setPC(_r.getHL());clock=1;}
+    public void JP_fPC(){
+        int result = _r.getPC();
+        _r.incrementPC();
+        result = (result << 8) + _r.getPC();
+        if(_r.getZFlag() || _r.getCFlag()){
+            _r.setPC(result);
+            clock=4;
+        }
+        else{
+            clock=3;
+            _r.incrementPC();
+        }
+    }
+    public void JR_PC(){
+        int offset = _r.getPC();
+        _r.setPC(_r.getPC() + offset);
+        clock=3;
+    }
+    public void JR_fPC(){
+        int offset = _r.getPC();
+        if(_r.getZFlag() || _r.getCFlag()){
+            _r.setPC(_r.getPC() + offset);
+            clock=3;
+        }
+        else{clock=2;
+        _r.incrementPC();
+        }
+    }
+    public void Call_PC(){
+        int newPC = _r.getPC() << 8;
+        _r.decrementSP2();
+        _memory.setWord(_r.setSP(), _r.getPC());
+        _r.incrementPC();
+        newPC += _r.getPC();
+        _r.setPC(newPC);
+        clock=8;
+    }
+    public void Call_FPC(){
+        if(_r.getZFlag || _r.getCFlag())
+        {
+            int newPC = _r.getPC() << 8;
+            _r.decrementSP2();
+            _memory.setWord(_r.setSP(), _r.getPC());
+            _r.incrementPC();
+            newPC += _r.getPC();
+            _r.setPC(newPC);
+            clock=8;
+        }
+        else{
+            _r.incrementPC2();
+            clock=4;
+        }
+    }
+    public void RET(){
+        _r.setPC(_memory.getWord(_r.getPC()));
+        _r.incrementSP2();
+        clock=4;
+    }
+    public void RET_F(){
+        if(_r.getZFlag || _r.getCFlag()){
+            _r.setPC(_memory.getWord(_r.getPC()));
+            _r.incrementSP2();
+            clock=5;
+        }
+        else{
+            clock=2;
+        }
+    }
+    public void RETI(){
+        _r.setPC(_memory.getWord(_r.getPC()));
+        _r.incrementSP2();
+        _r.setIME(true);
+        clock=4;
+    }
+    public void RST_00(){
+        _r.decrementSP2();
+        _memory.setWord(_r.getSP(), _r.getPC());
+        _r.setPC(0x0000);
+        clock = 4;
+    }
+    public void RST_08(){
+        _r.decrementSP2();
+        _memory.setWord(_r.getSP(), _r.getPC());
+        _r.setPC(0x0008);
+        clock = 4;
+    }
+    public void RST_10(){
+        _r.decrementSP2();
+        _memory.setWord(_r.getSP(), _r.getPC());
+        _r.setPC(0x0010);
+        clock = 4;
+    }
+    public void RST_18(){
+        _r.decrementSP2();
+        _memory.setWord(_r.getSP(), _r.getPC());
+        _r.setPC(0x0018);
+        clock = 4;
+    }
+    public void RST_20(){
+        _r.decrementSP2();
+        _memory.setWord(_r.getSP(), _r.getPC());
+        _r.setPC(0x0020);
+        clock = 4;
+    }
+    public void RST_28(){
+        _r.decrementSP2();
+        _memory.setWord(_r.getSP(), _r.getPC());
+        _r.setPC(0x0028);
+        clock = 4;
+    }
+    public void RST_30(){
+        _r.decrementSP2();
+        _memory.setWord(_r.getSP(), _r.getPC());
+        _r.setPC(0x0030);
+        clock = 4;
+    }
+    public void RST_38(){
+        _r.decrementSP2();
+        _memory.setWord(_r.getSP(), _r.getPC());
+        _r.setPC(0x0038);
+        clock = 4;
+    }
 }
 
