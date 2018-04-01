@@ -33,7 +33,7 @@ public class Registers{
         sp = 0;
         pc = 0;
         ime = false;
-        flag = 0;
+        flags = 0;
     }
 
     public int getA(){ return a;}
@@ -61,7 +61,7 @@ public class Registers{
     public void setNFlag(boolean input){flags = setBit(flags, input, 6);};
     public void setHFlag(boolean input){flags = setBit(flags, input, 5);};
     public void setCFlag(boolean input){flags = setBit(flags, input, 4);};
-    public void setFlag(int input){flags = input; & 0xFF};
+    public void setFlags(int input){flags = input & 0xFF;};
 
     public boolean getIME(){ return ime;}
     public void setIME(boolean input){ ime = input;}
@@ -84,19 +84,19 @@ public class Registers{
     public void setPC(int input){ pc = input & 0xFF;}
     public void setSP(int input){ sp = input & 0xFF;}
 
-    public void setAF(int input){ a = (input & 0xFF00) >> 8; flags.setFlags(input & 0x00FF);}
+    public void setAF(int input){ a = (input & 0xFF00) >> 8; this.setFlags(input & 0x00FF);}
     public void setBC(int input){ b = (input & 0xFF00) >> 8; c = (input & 0x00FF);}
     public void setDE(int input){ d = (input & 0xFF00) >> 8; e = (input & 0x00FF);}
     public void setHL(int input){ h = (input & 0xFF00) >> 8; l = (input & 0x00FF);}
 
-    public void incrementHL(){hl = this.getHL();hl += 1; setHL(hl);}
-    public void decrementHL(){hl = this.getHL();hl -= 1; setHL(hl);}
+    public void incrementHL(){int hl = this.getHL();hl += 1; this.setHL(hl);}
+    public void decrementHL(){int hl = this.getHL();hl -= 1; this.setHL(hl);}
 
-    public void incrementBC(){bc = this.getBC();bc += 1; setBC(bc);}
-    public void decrementBC(){bc = this.getBC();bc -= 1; setBC(bc);}
+    public void incrementBC(){int bc = this.getBC();bc += 1; this.setBC(bc);}
+    public void decrementBC(){int bc = this.getBC();bc -= 1; this.setBC(bc);}
 
-    public void incrementDE(){de = this.getDE();bc += 1; setDE(de);}
-    public void decrementDE(){de = this.getDE();bc -= 1; setDE(de);}
+    public void incrementDE(){int de = this.getDE();de += 1; this.setDE(de);}
+    public void decrementDE(){int de = this.getDE();de -= 1; this.setDE(de);}
 
 }
 
