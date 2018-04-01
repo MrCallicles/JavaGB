@@ -478,48 +478,486 @@ class Cpu{
     }
 
     //and a,r
-    public void AND_aa(){_r.setA((_r.getA & _r.getA) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);}
-    public void AND_ab(){_r.setA((_r.getA & _r.getB) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);}
-    public void AND_ac(){_r.setA((_r.getA & _r.getC) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);}
-    public void AND_ad(){_r.setA((_r.getA & _r.getD) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);}
-    public void AND_ae(){_r.setA((_r.getA & _r.getE) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);}
-    public void AND_ah(){_r.setA((_r.getA & _r.getH) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);}
-    public void AND_al(){_r.setA((_r.getA & _r.getL) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);}
+    public void AND_aa(){_r.setA((_r.getA & _r.getA) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);clock=1;}
+    public void AND_ab(){_r.setA((_r.getA & _r.getB) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);clock=1;}
+    public void AND_ac(){_r.setA((_r.getA & _r.getC) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);clock=1;}
+    public void AND_ad(){_r.setA((_r.getA & _r.getD) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);clock=1;}
+    public void AND_ae(){_r.setA((_r.getA & _r.getE) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);clock=1;}
+    public void AND_ah(){_r.setA((_r.getA & _r.getH) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);clock=1;}
+    public void AND_al(){_r.setA((_r.getA & _r.getL) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);clock=1;}
 
     //and a,pc
-    public void AND_aPC(){_r.setA((_r.getA & _r.getPC) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false); _r.incrementPC();}
+    public void AND_aPC(){_r.setA((_r.getA & _r.getPC) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false); _r.incrementPC();clock=2;}
     //and a,hl
-    public void AND_aHL(){_r.setA((_r.getA & _memory.getByte(_r.getHL())) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);}
+    public void AND_aHL(){_r.setA((_r.getA & _memory.getByte(_r.getHL())) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);clock=2;}
 
     //xor a,r
-    public void XOR_aa(){_r.setA((_r.getA ^ _r.getA) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);}
-    public void XOR_ab(){_r.setA((_r.getA ^ _r.getB) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);}
-    public void XOR_ac(){_r.setA((_r.getA ^ _r.getC) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);}
-    public void XOR_ad(){_r.setA((_r.getA ^ _r.getD) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);}
-    public void XOR_ae(){_r.setA((_r.getA ^ _r.getE) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);}
-    public void XOR_ah(){_r.setA((_r.getA ^ _r.getH) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);}
-    public void XOR_al(){_r.setA((_r.getA ^ _r.getL) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);}
+    public void XOR_aa(){_r.setA((_r.getA ^ _r.getA) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);clock=1;}
+    public void XOR_ab(){_r.setA((_r.getA ^ _r.getB) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);clock=1;}
+    public void XOR_ac(){_r.setA((_r.getA ^ _r.getC) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);clock=1;}
+    public void XOR_ad(){_r.setA((_r.getA ^ _r.getD) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);clock=1;}
+    public void XOR_ae(){_r.setA((_r.getA ^ _r.getE) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);clock=1;}
+    public void XOR_ah(){_r.setA((_r.getA ^ _r.getH) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);clock=1;}
+    public void XOR_al(){_r.setA((_r.getA ^ _r.getL) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);clock=1;}
 
     //xor a,pc
-    public void XOR_aPC(){_r.setA((_r.getA ^ _r.getPC) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false); _r.incrementPC();}
+    public void XOR_aPC(){_r.setA((_r.getA ^ _r.getPC) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false); _r.incrementPC();clock=2;}
     //xor a,hl
-    public void AND_aHL(){_r.setA((_r.getA ^ _memory.getByte(_r.getHL())) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);}
+    public void AND_aHL(){_r.setA((_r.getA ^ _memory.getByte(_r.getHL())) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);clock=2;}
 
     //or a,r
-    public void OR_aa(){_r.setA((_r.getA | _r.getA) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);}
-    public void OR_ab(){_r.setA((_r.getA | _r.getB) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);}
-    public void OR_ac(){_r.setA((_r.getA | _r.getC) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);}
-    public void OR_ad(){_r.setA((_r.getA | _r.getD) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);}
-    public void OR_ae(){_r.setA((_r.getA | _r.getE) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);}
-    public void OR_ah(){_r.setA((_r.getA | _r.getH) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);}
-    public void OR_al(){_r.setA((_r.getA | _r.getL) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);}
+    public void OR_aa(){_r.setA((_r.getA | _r.getA) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);clock=1;}
+    public void OR_ab(){_r.setA((_r.getA | _r.getB) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);clock=1;}
+    public void OR_ac(){_r.setA((_r.getA | _r.getC) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);clock=1;}
+    public void OR_ad(){_r.setA((_r.getA | _r.getD) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);clock=1;}
+    public void OR_ae(){_r.setA((_r.getA | _r.getE) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);clock=1;}
+    public void OR_ah(){_r.setA((_r.getA | _r.getH) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);clock=1;}
+    public void OR_al(){_r.setA((_r.getA | _r.getL) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);clock=1;}
 
     //or a,pc
-    public void AND_aPC(){_r.setA((_r.getA | _r.getPC) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false); _r.incrementPC();}
+    public void AND_aPC(){_r.setA((_r.getA | _r.getPC) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false); _r.incrementPC();clock=2;}
     //or a,hl
-    public void AND_aHL(){_r.setA((_r.getA | _memory.getByte(_r.getHL())) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);}
+    public void AND_aHL(){_r.setA((_r.getA | _memory.getByte(_r.getHL())) & 0xff); _r.getA() == 0 ? _r.setZFlag(true):_r.setZFlag(false);clock=2;}
 
     //compare a - r
-    public void CP_aa(){}
+    //VÉFIRIER QUE ÇA FONCTIONNE BIEN !
+    public void CP_aa(){
+        int result = _r.getA - _r.getA;
+        (result < 0) ? _r.setCFlag(true): _r.setCFlag(false);
+        result = result & 0xff;
+        (result == 0) ? _r.setZFlag(true): _r.setZFlag(false);
+        clock=1;
+    }
+    public void CP_ab(){
+        int result = _r.getA - _r.getB;
+        (result < 0) ? _r.setCFlag(true): _r.setCFlag(false);
+        result = result & 0xff;
+        (result == 0) ? _r.setZFlag(true): _r.setZFlag(false);
+        clock=1;
+    }
+    public void CP_ac(){
+        int result = _r.getA - _r.getC;
+        (result < 0) ? _r.setCFlag(true): _r.setCFlag(false);
+        result = result & 0xff;
+        (result == 0) ? _r.setZFlag(true): _r.setZFlag(false);
+        clock=1;
+    }
+    public void CP_ad(){
+        int result = _r.getA - _r.getC;
+        (result < 0) ? _r.setCFlag(true): _r.setCFlag(false);
+        result = result & 0xff;
+        (result == 0) ? _r.setZFlag(true): _r.setZFlag(false);
+        clock=1;
+    }
+    public void CP_ae(){
+        int result = _r.getA - _r.getC;
+        (result < 0) ? _r.setCFlag(true): _r.setCFlag(false);
+        result = result & 0xff;
+        (result == 0) ? _r.setZFlag(true): _r.setZFlag(false);
+        clock=1;
+    }
+    public void CP_ah(){
+        int result = _r.getA - _r.getC;
+        (result < 0) ? _r.setCFlag(true): _r.setCFlag(false);
+        result = result & 0xff;
+        (result == 0) ? _r.setZFlag(true): _r.setZFlag(false);
+        clock=1;
+    }
+    public void CP_al(){
+        int result = _r.getA - _r.getC;
+        (result < 0) ? _r.setCFlag(true): _r.setCFlag(false);
+        result = result & 0xff;
+        (result == 0) ? _r.setZFlag(true): _r.setZFlag(false);
+        clock=1;
+    }
 
+    public void CP_aPC(){
+        int result = _r.getA - _r.getPC;
+        (result < 0) ? _r.setCFlag(true): _r.setCFlag(false);
+        result = result & 0xff;
+        (result == 0) ? _r.setZFlag(true): _r.setZFlag(false);
+        _r.incrementPC();
+        clock=2;
+    }
+    public void CP_aHL(){
+        int result = _r.getA - _memory.getByte(_r.getHL());
+        (result < 0) ? _r.setCFlag(true): _r.setCFlag(false);
+        result = result & 0xff;
+        (result == 0) ? _r.setZFlag(true): _r.setZFlag(false);
+        _r.incrementPC();
+        clock=2;
+    }
+
+    //inc r
+    public void INC_a(){_r.setA((_r.getA() + 1) & 0xff); (_r.getA() == 0) ? _r.setZFlag(true): _r.setZFlag(false);clock=1;}
+    public void INC_b(){_r.setB((_r.getB() + 1) & 0xff); (_r.getB() == 0) ? _r.setZFlag(true): _r.setZFlag(false);clock=1;}
+    public void INC_c(){_r.setC((_r.getC() + 1) & 0xff); (_r.getC() == 0) ? _r.setZFlag(true): _r.setZFlag(false);clock=1;}
+    public void INC_d(){_r.setD((_r.getD() + 1) & 0xff); (_r.getD() == 0) ? _r.setZFlag(true): _r.setZFlag(false);clock=1;}
+    public void INC_e(){_r.setE((_r.getE() + 1) & 0xff); (_r.getE() == 0) ? _r.setZFlag(true): _r.setZFlag(false);clock=1;}
+    public void INC_h(){_r.setH((_r.getH() + 1) & 0xff); (_r.getH() == 0) ? _r.setZFlag(true): _r.setZFlag(false);clock=1;}
+    public void INC_l(){_r.setL((_r.getL() + 1) & 0xff); (_r.getL() == 0) ? _r.setZFlag(true): _r.setZFlag(false);clock=1;}
+    //dec (hl)
+    public void INC_HL(){_memory.setByte(_r.getHL(), (_r.getHL + 1) & 0xff); (_memory.getByte(_r.getHL()) == 0) ? _r.setZFlag(true); _r.setZFlag(false);clock=3;}
+
+    //dec r
+    public void DEC_a(){_r.setA((_r.getA() - 1) & 0xff); (_r.getA() == 0) ? _r.setZFlag(true): _r.setZFlag(false);clock=1;}
+    public void DEC_b(){_r.setB((_r.getB() - 1) & 0xff); (_r.getB() == 0) ? _r.setZFlag(true): _r.setZFlag(false);clock=1;}
+    public void DEC_c(){_r.setC((_r.getC() - 1) & 0xff); (_r.getC() == 0) ? _r.setZFlag(true): _r.setZFlag(false);clock=1;}
+    public void DEC_d(){_r.setD((_r.getD() - 1) & 0xff); (_r.getD() == 0) ? _r.setZFlag(true): _r.setZFlag(false);clock=1;}
+    public void DEC_e(){_r.setE((_r.getE() - 1) & 0xff); (_r.getE() == 0) ? _r.setZFlag(true): _r.setZFlag(false);clock=1;}
+    public void DEC_h(){_r.setH((_r.getH() - 1) & 0xff); (_r.getH() == 0) ? _r.setZFlag(true): _r.setZFlag(false);clock=1;}
+    public void DEC_l(){_r.setL((_r.getL() - 1) & 0xff); (_r.getL() == 0) ? _r.setZFlag(true): _r.setZFlag(false);clock=1;}
+    //dec (hl)
+    public void INC_HL(){_memory.setByte(_r.getHL(), (_r.getHL - 1) & 0xff); (_memory.getByte(_r.getHL()) == 0) ? _r.setZFlag(true); _r.setZFlag(false);clock=3;}
+
+    //daa ????
+    public void DAA(){}
+
+    //CPL
+    public void CPL(){_r.setA(_r.regA() ^ 0xFF);clock=1;}
+
+    //add HL,rr
+    public void ADD_HLBC(){
+        int result = 0;
+        result = _r.getHL() + _r.getBC();
+        result > 0xFF ? _r.setCFlag(true) : _r.setCFlag(false);
+        _r.setHL(result & 0xFFFF);
+        clock=2;
+    }
+    public void ADD_HLDE(){
+        int result = 0;
+        result = _r.getHL() + _r.getDE();
+        result > 0xFF ? _r.setCFlag(true) : _r.setCFlag(false);
+        _r.setHL(result & 0xFFFF);
+        clock=2;
+    }
+    public void ADD_HLHL(){
+        int result = 0;
+        result = _r.getHL() + _r.getHL();
+        result > 0xFF ? _r.setCFlag(true) : _r.setCFlag(false);
+        _r.setHL(result & 0xFFFF);
+        clock=2;
+    }
+    public void ADD_HLSP(){
+        int result = 0;
+        result = _r.getHL() + _r.getSP();
+        result > 0xFF ? _r.setCFlag(true) : _r.setCFlag(false);
+        _r.setHL(result & 0xFFFF);
+        clock=2;
+    }
+    //inc rr
+    public void INC_BC(){_r.incrementBC();clock=2;}
+    public void INC_DE(){_r.incrementDE();clock=2;}
+    public void INC_HL(){_r.incrementHL();clock=2;}
+    public void INC_SP(){_r.incrementSP();clock=2;}
+    //dec rr
+    public void DEC_BC(){_r.decrementBC();clock=2;}
+    public void DEC_DE(){_r.decrementDE();clock=2;}
+    public void DEC_HL(){_r.decrementHL();clock=2;}
+    public void DEC_SP(){_r.decrementSP();clock=2;}
+
+    //add SP,dd (signed number)
+    public void ADD_SPDD(){
+        int result = _memory.getByte(_r.getPC());
+        if (result > 127) result = -((~i+1)&255);
+        _r.incrementPC();
+        _r.setSP(_r.getSP() += result);
+        clock=4;
+    }
+
+    public void LD_HLSPDD(){
+        int result = _memory.getByte(_r.getPC());
+        if (result > 127) result = -((~i+1)&255);
+        _r.incrementPC();
+        _r.setSP(_r.getSP() += result);
+        _r.setH((result >> 8) & 255);
+        _r.setL((result & 255));
+        clock=3;
+    }
+
+    /* rotate/shift commands */ // à finir !!!!
+    public void RLCA(){
+        int result = _r.getA() << 1;
+        if (result > 0xff) { _r.setCFlag(true); result |= 1;}
+        result = result & 0xff;
+        (result == 0) ? _r.setZFlag(true) : _r.setZFlag(false);
+        clock=1;
+    }
+    public void RLA(){
+        (_r.getA() & 0x80) == 0x80 ? _r.setZFlag(true) : _r.setZFlag(false);
+        int result = _r.getA() << 1;
+        _r.getCFlag() ? result = result | 1: ;
+        _r.setA(result & 0xff);
+        (_r.getA() == 0) ? _r.getZFlag(true) : _r.getZFlag(false);
+        clock=1;
+    }
+    public void RRCA(){
+    }
+    public void RRA(){}
+    public void RLC_r(){}
+    public void RLC_HL(){}
+    public void RL_r(){}
+    public void RL_HL(){}
+    public void RRC_r(){}
+    public void RRC_HL(){}
+    public void RR_r(){}
+    public void RR_HL(){}
+    public void SLA_r(){}
+    public void SLA_HL(){}
+    public void SWAP_r(){}
+    public void SWAP_HL(){}
+    public void SRA_r(){}
+    public void SRA_HL(){}
+    public void SRL_r(){}
+    public void SRL_HL(){}
+
+    /* singlebit operations */
+    public void BIT_0a(){ (_r.getA() & 1) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_1a(){ (_r.getA() & 2) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_2a(){ (_r.getA() & 4) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_3a(){ (_r.getA() & 8) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_4a(){ (_r.getA() & 16) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_5a(){ (_r.getA() & 32) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_6a(){ (_r.getA() & 64) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_7a(){ (_r.getA() & 128) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+
+    public void BIT_0b(){ (_r.getB() & 1) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_1b(){ (_r.getB() & 2) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_2b(){ (_r.getB() & 4) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_3b(){ (_r.getB() & 8) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_4b(){ (_r.getB() & 16) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_5b(){ (_r.getB() & 32) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_6b(){ (_r.getB() & 64) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_7b(){ (_r.getB() & 128) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+
+    public void BIT_0c(){ (_r.getC() & 1) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_1c(){ (_r.getC() & 2) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_2c(){ (_r.getC() & 4) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_3c(){ (_r.getC() & 8) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_4c(){ (_r.getC() & 16) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_5c(){ (_r.getC() & 32) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_6c(){ (_r.getC() & 64) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_7c(){ (_r.getC() & 128) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+
+    public void BIT_0d(){ (_r.getD() & 1) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_1d(){ (_r.getD() & 2) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_2d(){ (_r.getD() & 4) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_3d(){ (_r.getD() & 8) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_4d(){ (_r.getD() & 16) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_5d(){ (_r.getD() & 32) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_6d(){ (_r.getD() & 64) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_7d(){ (_r.getD() & 128) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+
+    public void BIT_0e(){ (_r.getE() & 1) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_1e(){ (_r.getE() & 2) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_2e(){ (_r.getE() & 4) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_3e(){ (_r.getE() & 8) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_4e(){ (_r.getE() & 16) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_5e(){ (_r.getE() & 32) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_6e(){ (_r.getE() & 64) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_7e(){ (_r.getE() & 128) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+
+    public void BIT_0h(){ (_r.getH() & 1) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_1h(){ (_r.getH() & 2) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_2h(){ (_r.getH() & 4) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_3h(){ (_r.getH() & 8) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_4h(){ (_r.getH() & 16) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_5h(){ (_r.getH() & 32) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_6h(){ (_r.getH() & 64) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_7h(){ (_r.getH() & 128) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+
+    public void BIT_0l(){ (_r.getL() & 1) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_1l(){ (_r.getL() & 2) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_2l(){ (_r.getL() & 4) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_3l(){ (_r.getL() & 8) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_4l(){ (_r.getL() & 16) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_5l(){ (_r.getL() & 32) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_6l(){ (_r.getL() & 64) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+    public void BIT_7l(){ (_r.getL() & 128) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=2;}
+
+    public void BIT_0HL(){ (_memory.getByte(_r.getHL()) & 1) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=3;}
+    public void BIT_1HL(){ (_memory.getByte(_r.getHL()) & 2) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=3;}
+    public void BIT_2HL(){ (_memory.getByte(_r.getHL()) & 4) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=3;}
+    public void BIT_3HL(){ (_memory.getByte(_r.getHL()) & 8) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=3;}
+    public void BIT_4HL(){ (_memory.getByte(_r.getHL()) & 16) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=3;}
+    public void BIT_5HL(){ (_memory.getByte(_r.getHL()) & 32) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=3;}
+    public void BIT_6HL(){ (_memory.getByte(_r.getHL()) & 64) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=3;}
+    public void BIT_7HL(){ (_memory.getByte(_r.getHL()) & 128) == 0 ? _r.setZFlag(true): _r.setZFlag(false);clock=3;}
+
+    public void SET_0a(){_r.setA(_r.getA |= 1);clock=2;}
+    public void SET_1a(){_r.setA(_r.getA |= 2);clock=2;}
+    public void SET_2a(){_r.setA(_r.getA |= 4);clock=2;}
+    public void SET_3a(){_r.setA(_r.getA |= 8);clock=2;}
+    public void SET_4a(){_r.setA(_r.getA |= 16);clock=2;}
+    public void SET_5a(){_r.setA(_r.getA |= 32);clock=2;}
+    public void SET_6a(){_r.setA(_r.getA |= 64);clock=2;}
+    public void SET_7a(){_r.setA(_r.getA |= 128);clock=2;}
+
+    public void SET_0b(){_r.setB(_r.getB |= 1);clock=2;}
+    public void SET_1b(){_r.setB(_r.getB |= 2);clock=2;}
+    public void SET_2b(){_r.setB(_r.getB |= 4);clock=2;}
+    public void SET_3b(){_r.setB(_r.getB |= 8);clock=2;}
+    public void SET_4b(){_r.setB(_r.getB |= 16);clock=2;}
+    public void SET_5b(){_r.setB(_r.getB |= 32);clock=2;}
+    public void SET_6b(){_r.setB(_r.getB |= 64);clock=2;}
+    public void SET_7b(){_r.setB(_r.getB |= 128);clock=2;}
+
+    public void SET_0c(){_r.setC(_r.getC |= 1);clock=2;}
+    public void SET_1c(){_r.setC(_r.getC |= 2);clock=2;}
+    public void SET_2c(){_r.setC(_r.getC |= 4);clock=2;}
+    public void SET_3c(){_r.setC(_r.getC |= 8);clock=2;}
+    public void SET_4c(){_r.setC(_r.getC |= 16);clock=2;}
+    public void SET_5c(){_r.setC(_r.getC |= 32);clock=2;}
+    public void SET_6c(){_r.setC(_r.getC |= 64);clock=2;}
+    public void SET_7c(){_r.setC(_r.getC |= 128);clock=2;}
+
+    public void SET_0d(){_r.setD(_r.getD |= 1);clock=2;}
+    public void SET_1d(){_r.setD(_r.getD |= 2);clock=2;}
+    public void SET_2d(){_r.setD(_r.getD |= 4);clock=2;}
+    public void SET_3d(){_r.setD(_r.getD |= 8);clock=2;}
+    public void SET_4d(){_r.setD(_r.getD |= 16);clock=2;}
+    public void SET_5d(){_r.setD(_r.getD |= 32);clock=2;}
+    public void SET_6d(){_r.setD(_r.getD |= 64);clock=2;}
+    public void SET_7d(){_r.setD(_r.getD |= 128);clock=2;}
+
+    public void SET_0e(){_r.setE(_r.getE |= 1);clock=2;}
+    public void SET_1e(){_r.setE(_r.getE |= 2);clock=2;}
+    public void SET_2e(){_r.setE(_r.getE |= 4);clock=2;}
+    public void SET_3e(){_r.setE(_r.getE |= 8);clock=2;}
+    public void SET_4e(){_r.setE(_r.getE |= 16);clock=2;}
+    public void SET_5e(){_r.setE(_r.getE |= 32);clock=2;}
+    public void SET_6e(){_r.setE(_r.getE |= 64);clock=2;}
+    public void SET_7e(){_r.setE(_r.getE |= 128);clock=2;}
+
+    public void SET_0h(){_r.setH(_r.getH |= 1);clock=2;}
+    public void SET_1h(){_r.setH(_r.getH |= 2);clock=2;}
+    public void SET_2h(){_r.setH(_r.getH |= 4);clock=2;}
+    public void SET_3h(){_r.setH(_r.getH |= 8);clock=2;}
+    public void SET_4h(){_r.setH(_r.getH |= 16);clock=2;}
+    public void SET_5h(){_r.setH(_r.getH |= 32);clock=2;}
+    public void SET_6h(){_r.setH(_r.getH |= 64);clock=2;}
+    public void SET_7h(){_r.setH(_r.getH |= 128);clock=2;}
+
+    public void SET_0l(){_r.setL(_r.getL |= 1);clock=2;}
+    public void SET_1l(){_r.setL(_r.getL |= 2);clock=2;}
+    public void SET_2l(){_r.setL(_r.getL |= 4);clock=2;}
+    public void SET_3l(){_r.setL(_r.getL |= 8);clock=2;}
+    public void SET_4l(){_r.setL(_r.getL |= 16);clock=2;}
+    public void SET_5l(){_r.setL(_r.getL |= 32);clock=2;}
+    public void SET_6l(){_r.setL(_r.getL |= 64);clock=2;}
+    public void SET_7l(){_r.setL(_r.getL |= 128);clock=2;}
+
+    public void SET_0HL(){_memory.setByte(_r.getHl(), _r.getHL() |= 1);clock=4;}
+    public void SET_1HL(){_memory.setByte(_r.getHl(), _r.getHL() |= 2);clock=4;}
+    public void SET_2HL(){_memory.setByte(_r.getHl(), _r.getHL() |= 4);clock=4;}
+    public void SET_3HL(){_memory.setByte(_r.getHl(), _r.getHL() |= 8);clock=4;}
+    public void SET_4HL(){_memory.setByte(_r.getHl(), _r.getHL() |= 16);clock=4;}
+    public void SET_5HL(){_memory.setByte(_r.getHl(), _r.getHL() |= 32);clock=4;}
+    public void SET_6HL(){_memory.setByte(_r.getHl(), _r.getHL() |= 64);clock=4;}
+    public void SET_7HL(){_memory.setByte(_r.getHl(), _r.getHL() |= 128);clock=4;}
+
+    public void RES_0a(){_r.setA(_r.getA() & 0xFE);clock=2;}
+    public void RES_1a(){_r.setA(_r.getA() & 0xFD);clock=2;}
+    public void RES_2a(){_r.setA(_r.getA() & 0xFB);clock=2;}
+    public void RES_3a(){_r.setA(_r.getA() & 0xF7);clock=2;}
+    public void RES_4a(){_r.setA(_r.getA() & 0xEF);clock=2;}
+    public void RES_5a(){_r.setA(_r.getA() & 0xDF);clock=2;}
+    public void RES_6a(){_r.setA(_r.getA() & 0xBF);clock=2;}
+    public void RES_7a(){_r.setA(_r.getA() & 0x7F);clock=2;}
+
+    public void RES_0b(){_r.setB(_r.getB() & 0xFE);clock=2;}
+    public void RES_1b(){_r.setB(_r.getB() & 0xFD);clock=2;}
+    public void RES_2b(){_r.setB(_r.getB() & 0xFB);clock=2;}
+    public void RES_3b(){_r.setB(_r.getB() & 0xF7);clock=2;}
+    public void RES_4b(){_r.setB(_r.getB() & 0xEF);clock=2;}
+    public void RES_5b(){_r.setB(_r.getB() & 0xDF);clock=2;}
+    public void RES_6b(){_r.setB(_r.getB() & 0xBF);clock=2;}
+    public void RES_7b(){_r.setB(_r.getB() & 0x7F);clock=2;}
+
+    public void RES_0c(){_r.setC(_r.getC() & 0xFE);clock=2;}
+    public void RES_1c(){_r.setC(_r.getC() & 0xFD);clock=2;}
+    public void RES_2c(){_r.setC(_r.getC() & 0xFC);clock=2;}
+    public void RES_3c(){_r.setC(_r.getC() & 0xF7);clock=2;}
+    public void RES_4c(){_r.setC(_r.getC() & 0xEF);clock=2;}
+    public void RES_5c(){_r.setC(_r.getC() & 0xDF);clock=2;}
+    public void RES_6c(){_r.setC(_r.getC() & 0xCF);clock=2;}
+    public void RES_7c(){_r.setC(_r.getC() & 0x7F);clock=2;}
+
+    public void RES_0d(){_r.setD(_r.getD() & 0xFE);clock=2;}
+    public void RES_1d(){_r.setD(_r.getD() & 0xFD);clock=2;}
+    public void RES_2d(){_r.setD(_r.getD() & 0xFD);clock=2;}
+    public void RES_3d(){_r.setD(_r.getD() & 0xF7);clock=2;}
+    public void RES_4d(){_r.setD(_r.getD() & 0xEF);clock=2;}
+    public void RES_5d(){_r.setD(_r.getD() & 0xDF);clock=2;}
+    public void RES_6d(){_r.setD(_r.getD() & 0xDF);clock=2;}
+    public void RES_7d(){_r.setD(_r.getD() & 0x7F);clock=2;}
+
+    public void RES_0e(){_r.setE(_r.getE() & 0xFE);clock=2;}
+    public void RES_1e(){_r.setE(_r.getE() & 0xFE);clock=2;}
+    public void RES_2e(){_r.setE(_r.getE() & 0xFE);clock=2;}
+    public void RES_3e(){_r.setE(_r.getE() & 0xF7);clock=2;}
+    public void RES_4e(){_r.setE(_r.getE() & 0xEF);clock=2;}
+    public void RES_5e(){_r.setE(_r.getE() & 0xEF);clock=2;}
+    public void RES_6e(){_r.setE(_r.getE() & 0xEF);clock=2;}
+    public void RES_7e(){_r.setE(_r.getE() & 0x7F);clock=2;}
+
+    public void RES_0h(){_r.setH(_r.getH() & 0xFE);clock=2;}
+    public void RES_1h(){_r.setH(_r.getH() & 0xFE);clock=2;}
+    public void RES_2h(){_r.setH(_r.getH() & 0xFE);clock=2;}
+    public void RES_3h(){_r.setH(_r.getH() & 0xF7);clock=2;}
+    public void RES_4h(){_r.setH(_r.getH() & 0xEF);clock=2;}
+    public void RES_5h(){_r.setH(_r.getH() & 0xEF);clock=2;}
+    public void RES_6h(){_r.setH(_r.getH() & 0xEF);clock=2;}
+    public void RES_7h(){_r.setH(_r.getH() & 0x7F);clock=2;}
+
+    public void RES_0l(){_r.setL(_r.getL() & 0xFE);clock=2;}
+    public void RES_1l(){_r.setL(_r.getL() & 0xFE);clock=2;}
+    public void RES_2l(){_r.setL(_r.getL() & 0xFE);clock=2;}
+    public void RES_3l(){_r.setL(_r.getL() & 0xF7);clock=2;}
+    public void RES_4l(){_r.setL(_r.getL() & 0xEF);clock=2;}
+    public void RES_5l(){_r.setL(_r.getL() & 0xEF);clock=2;}
+    public void RES_6l(){_r.setL(_r.getL() & 0xEF);clock=2;}
+    public void RES_7l(){_r.setL(_r.getL() & 0x7F);clock=2;}
+
+    public void RES_0HL(){_memory.setByte(_r.getHl(), _r.getHL() & 0xFE);clock=4;}
+    public void RES_1HL(){_memory.setByte(_r.getHl(), _r.getHL() & 0xFE);clock=4;}
+    public void RES_2HL(){_memory.setByte(_r.getHl(), _r.getHL() & 0xFE);clock=4;}
+    public void RES_3HL(){_memory.setByte(_r.getHl(), _r.getHL() & 0xF7);clock=4;}
+    public void RES_4HL(){_memory.setByte(_r.getHl(), _r.getHL() & 0xEF);clock=4;}
+    public void RES_5HL(){_memory.setByte(_r.getHl(), _r.getHL() & 0xEF);clock=4;}
+    public void RES_6HL(){_memory.setByte(_r.getHl(), _r.getHL() & 0xEF);clock=4;}
+    public void RES_7HL(){_memory.setByte(_r.getHl(), _r.getHL() & 0x7F);clock=4;}
+
+    /* CPU-controlcommand */
+    public void CCF(){_r.getCFlag() ? _r.setCFlag(false) : _r.setCFlag(true);clock=1;}
+    public void SCF(){_r.setCFlag(true);clock=1;}
+    public void NOP(){clock=1;}
+    public void HALT(){clock=1;}
+    public void STOP(){clock=1;}
+    public void DI(){_r.setIME(false);}
+    public void EI(){_r.setIME(true);}
+
+
+    /* Jump commands */
+    public void JP_PC(){
+        int result = _r.getPC();
+        _r.incrementPC();
+        result = (result << 8) + _r.getPC();
+        _r.setPC(result);
+        _r.incrementPC();
+        clock=4;
+    }
+    public void JP_HL(){ _r.setPC(_r.getHL()); }
+    public void JP_fPC(){}
+    public void JR(){}
+    public void JR(){}
+    public void Call_PC(){}
+    public void Call_FPC(){}
+    public void RET(){}
+    public void RET_F(){}
+    public void RETI(){}
+    public void RST(){}
 }
+
+
+

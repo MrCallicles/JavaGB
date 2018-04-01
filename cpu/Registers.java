@@ -15,6 +15,7 @@ public class Registers{
     private int a,b,c,d,e,h,l;
     private int sp;
     private int pc;
+    private boolean ime;
     private int flags;
 
     Registers(){
@@ -31,6 +32,7 @@ public class Registers{
         l = 0;
         sp = 0;
         pc = 0;
+        ime = false;
         flag = 0;
     }
 
@@ -49,10 +51,10 @@ public class Registers{
     public int getDE(){return d << 8 + e;}
     public int getHL(){return h << 8 + l;}
 
-    public boolean getZFlag(){ return (flags & (1 << 7)) != 0; };
-    public boolean getNFlag(){ return (flags & (1 << 6)) != 0; };
-    public boolean getHFlag(){ return (flags & (1 << 5)) != 0; };
-    public boolean getCFlag(){ return (flags & (1 << 4)) != 0; };
+    public boolean getZFlag(){ return (flags & (1 << 7)) != 0; }; //0x80
+    public boolean getNFlag(){ return (flags & (1 << 6)) != 0; }; //0x40
+    public boolean getHFlag(){ return (flags & (1 << 5)) != 0; }; //0x20
+    public boolean getCFlag(){ return (flags & (1 << 4)) != 0; }; //0x10
     public int getFlags(){ return flags;};
 
     public void setZFlag(boolean input){flags = setBit(flags, input, 7);};
@@ -60,6 +62,9 @@ public class Registers{
     public void setHFlag(boolean input){flags = setBit(flags, input, 5);};
     public void setCFlag(boolean input){flags = setBit(flags, input, 4);};
     public void setFlag(int input){flags = input; & 0xFF};
+
+    public boolean getIME(){ return ime;}
+    public void setIME(boolean input){ ime = input;}
 
     //& 0xFFFF pour contenir le résultat dans 16 bits
     public void incrementPC(){ pc = (pc + 1) & 0xFFFF;}
@@ -86,6 +91,12 @@ public class Registers{
 
     public void incrementHL(){hl = this.getHL();hl += 1; setHL(hl);}
     public void decrementHL(){hl = this.getHL();hl -= 1; setHL(hl);}
+
+    public void incrementBC(){bc = this.getBC();bc += 1; setBC(bc);}
+    public void decrementBC(){bc = this.getBC();bc -= 1; setBC(bc);}
+
+    public void incrementDE(){de = this.getDE();bc += 1; setDE(de);}
+    public void decrementDE(){de = this.getDE();bc -= 1; setDE(de);}
 
 }
 
