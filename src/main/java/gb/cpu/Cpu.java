@@ -1,15 +1,34 @@
-//
 // Cpu.java
-// manque daa, ld_nn_a
+// manque daa
+// LD (rr), nn eput être mal implémenté !!!
+// (
+// LD_BCnn()
+// LD_HLnn()
+// LD_DEnn()
+// LD_AFnn()
+// )
 //
-package JavaGB.cpu;
+package gb.cpu;
 
-import JavaGB.memory.Ram;
+import gb.memory;
 
-class Cpu{
+public class Cpu{
     private Registers _r = new Registers();
     private Ram _memory = new Ram();
     private int clock;
+
+    //interface
+    public int PC(){return _memory.getByte(_r.getPC())};
+    public int incrementPC(){_r.incrementPC();};
+    public int clock(){return clock};
+    public int[] getRam(){
+        int[] ram = new int[2^16];
+        for(int i= 0; i < 2^16; i++)
+        {
+            ram[i] = _memory.getByte(i);
+        }
+        return ram;
+    }
 
     /* LD */
     //LD regX from regY
@@ -97,12 +116,19 @@ class Cpu{
     public void LD_aDE(){_r.setA(_memory.getByte(_r.getDE()));clock=2;}
     public void LD_BCa(){_memory.setWord(_r.getBC(), _r.getA());clock=2;}
     public void LD_DEa(){_memory.setWord(_r.getDE(), _r.getA());clock=2;}
-    //LD (nn) a ???
-    public void LD_nn_a(){}
+    //LD (nn) a
+    public void LD_ann(){
+        int address = _r.getPC();
+        _r.incrementPC();
+        int address = address << 8 + _r.getPC();
+        _r.incrementPC();
+        _r.setA(_memory.getByte(address));
+        clock=4;
+    }
 
     //LD A from/to (FF00 + pc (n)) io-port
-    public void LD_aIO(){_r.setA(_memory.getByte(0xFF + _r.getPC())); _r.incrementPC();clock=3;}
-    public void LD_IOa(){_memory.setByte(0xFF + _r.getPC(), _r.getA()); _r.incrementPC();clock=3;}
+    public void LD_aIO(){_r.setA(_memory.getByte(0xFF00 + _r.getPC())); _r.incrementPC();clock=3;}
+    public void LD_IOa(){_memory.setByte(0xFF00 + _r.getPC(), _r.getA()); _r.incrementPC();clock=3;}
     //LD a from/to (FF00 + C) ???
     public void LDi_HLa(){_memory.setByte(_r.getHL(), _r.getA()); _r.incrementHL(); clock=2;}
     public void LDi_aHL(){_r.setA(_memory.getByte(_r.getHL())); _r.incrementHL(); clock=2;}
@@ -110,6 +136,7 @@ class Cpu{
     public void LDd_aHL(){ _r.decrementHL(); _r.setA(_memory.getByte(_r.getHL()));clock=2;}
 
     //LD rr,nn
+    //peut être mal implémenté !!!!!
     public void LD_BCnn(){_r.setBC(_memory.getWord(_r.getPC())); _r.incrementPC2();clock=3;}
     public void LD_DEnn(){_r.setDE(_memory.getWord(_r.getPC())); _r.incrementPC2();clock=3;}
     public void LD_HLnn(){_r.setHL(_memory.getWord(_r.getPC())); _r.incrementPC2();clock=3;}
@@ -1281,7 +1308,7 @@ class Cpu{
         _r.incrementPC();
         }
     }
-    public void Call_PC(){
+    public void CALL_PC(){
         int newPC = _r.getPC() << 8;
         _r.decrementSP2();
         _memory.setWord(_r.getSP(), _r.getPC());
@@ -1290,8 +1317,40 @@ class Cpu{
         _r.setPC(newPC);
         clock=8;
     }
-    public void Call_FPC(){
+    public void CALL_FPC(){
         if(_r.getZFlag() || _r.getCFlag())
+        {
+            int newPC = _r.getPC() << 8;
+            _r.decrementSP2();
+            _memory.setWord(_r.getSP(), _r.getPC());
+            _r.incrementPC();
+            newPC += _r.getPC();
+            _r.setPC(newPC);
+            clock=8;
+        }
+        else{
+            _r.incrementPC2();
+            clock=4;
+        }
+    }
+    public void CALL_ZPC(){
+        if(_r.getZFlag())
+        {
+            int newPC = _r.getPC() << 8;
+            _r.decrementSP2();
+            _memory.setWord(_r.getSP(), _r.getPC());
+            _r.incrementPC();
+            newPC += _r.getPC();
+            _r.setPC(newPC);
+            clock=8;
+        }
+        else{
+            _r.incrementPC2();
+            clock=4;
+        }
+    }
+    public void CALL_CPC(){
+        if(_r.getCFlag())
         {
             int newPC = _r.getPC() << 8;
             _r.decrementSP2();
@@ -1313,6 +1372,26 @@ class Cpu{
     }
     public void RET_F(){
         if(_r.getZFlag() || _r.getCFlag()){
+            _r.setPC(_memory.getWord(_r.getPC()));
+            _r.incrementSP2();
+            clock=5;
+        }
+        else{
+            clock=2;
+        }
+    }
+    public void RET_Z(){
+        if(_r.getZFlag()){
+            _r.setPC(_memory.getWord(_r.getPC()));
+            _r.incrementSP2();
+            clock=5;
+        }
+        else{
+            clock=2;
+        }
+    }
+    public void RET_C(){
+        if(_r.getCFlag()){
             _r.setPC(_memory.getWord(_r.getPC()));
             _r.incrementSP2();
             clock=5;

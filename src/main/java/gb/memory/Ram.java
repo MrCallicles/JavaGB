@@ -3,6 +3,9 @@ package JavaGB.memory;
 public class Ram{
     private int[] ram = new int[2^16];
 
+    Ram(){
+    }
+
     public void setByte(int address, int value){
         ram[address] = value & 0xff; //check que la valeur d'entrée est sur 8 bits
     }
