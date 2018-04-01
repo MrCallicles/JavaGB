@@ -9,12 +9,13 @@
 //
 package JavaGB.cpu;
 
+import static JavaGB.cpu.Utils.setBit;
+
 public class Registers{
     private int a,b,c,d,e,h,l;
     private int sp;
     private int pc;
-
-    private Flags flags = new Flags();
+    private int flags;
 
     Registers(){
         this.reset();
@@ -30,7 +31,7 @@ public class Registers{
         l = 0;
         sp = 0;
         pc = 0;
-        flag.setFlag(0);
+        flag = 0;
     }
 
     public int getA(){ return a;}
@@ -43,32 +44,48 @@ public class Registers{
     public int getPC(){ return pc;}
     public int getSP(){ return sp;}
 
-    public int getAF(){return a << 8 + flags.getFlags();}
+    public int getAF(){return a << 8 + flags;}
     public int getBC(){return b << 8 + c;}
     public int getDE(){return d << 8 + e;}
     public int getHL(){return h << 8 + l;}
 
+    public boolean getZFlag(){ return (flags & (1 << 7)) != 0; };
+    public boolean getNFlag(){ return (flags & (1 << 6)) != 0; };
+    public boolean getHFlag(){ return (flags & (1 << 5)) != 0; };
+    public boolean getCFlag(){ return (flags & (1 << 4)) != 0; };
+    public int getFlags(){ return flags;};
 
-    public Flags getFlags(){ return flags; }
+    public void setZFlag(boolean input){flags = setBit(flags, input, 7);};
+    public void setNFlag(boolean input){flags = setBit(flags, input, 6);};
+    public void setHFlag(boolean input){flags = setBit(flags, input, 5);};
+    public void setCFlag(boolean input){flags = setBit(flags, input, 4);};
+    public void setFlag(int input){flags = input; & 0xFF};
 
     //& 0xFFFF pour contenir le résultat dans 16 bits
     public void incrementPC(){ pc = (pc + 1) & 0xFFFF;}
+    public void incrementPC2(){ pc = (pc + 2) & 0xFFFF;}
     public void incrementSP(){ sp = (sp + 1) & 0xFFFF;}
+    public void incrementSP2(){ sp = (sp + 2) & 0xFFFF;}
     public void decrementSP(){ sp = (sp - 1) & 0xFFFF;}
+    public void decrementSP2(){ sp = (sp - 2) & 0xFFFF;}
 
-    public void setA(int input){ a = input;}
-    public void setB(int input){ b = input;}
-    public void setC(int input){ c = input;}
-    public void setD(int input){ d = input;}
-    public void setE(int input){ e = input;}
-    public void setH(int input){ h = input;}
-    public void setL(int input){ l = input;}
-    public void setPC(int input){ pc = input;}
-    public void setSP(int input){ sp = input;}
+    public void setA(int input){ a = input & 0xFF;}
+    public void setB(int input){ b = input & 0xFF;}
+    public void setC(int input){ c = input & 0xFF;}
+    public void setD(int input){ d = input & 0xFF;}
+    public void setE(int input){ e = input & 0xFF;}
+    public void setH(int input){ h = input & 0xFF;}
+    public void setL(int input){ l = input & 0xFF;}
+    public void setPC(int input){ pc = input & 0xFF;}
+    public void setSP(int input){ sp = input & 0xFF;}
 
     public void setAF(int input){ a = (input & 0xFF00) >> 8; flags.setFlags(input & 0x00FF);}
     public void setBC(int input){ b = (input & 0xFF00) >> 8; c = (input & 0x00FF);}
     public void setDE(int input){ d = (input & 0xFF00) >> 8; e = (input & 0x00FF);}
     public void setHL(int input){ h = (input & 0xFF00) >> 8; l = (input & 0x00FF);}
+
+    public void incrementHL(){hl = this.getHL();hl += 1; setHL(hl);}
+    public void decrementHL(){hl = this.getHL();hl -= 1; setHL(hl);}
+
 }
 
