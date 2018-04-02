@@ -1,10 +1,17 @@
-package JavaGB;
+package gb;
 
-import JavaGB.cpu.Cpu;
+import gb.cpu.*;
+import gb.memory.*;
+
+import static gb.memory.TestRom;
 
 public class JavaGB{
     public static void main(String[] args){
-        Cpu cpu = new Cpu();
+        Ram ram = new Ram();
+        ExecCpu cpu = new ExecCpu(ram);
+
+        ram.loadRomArray(testRom);
+        cpu.execInstruction();
     }
 }
 

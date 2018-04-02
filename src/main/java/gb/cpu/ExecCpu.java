@@ -5,16 +5,24 @@ package gb.cpu;
 
 class ExecCpu{
 
-    private Cpu cpu = new Cpu();
+    private Cpu cpu;
     private int instruction;
     private long tick;
 
+    ExecCpu(Ram ram){
+        cpu = new Cpu(ram);
+    }
+
     public int getInstruction(){ return instruction; }
-    public int execInstruction(){
+
+    public void execInstruction(){
 
         this.loadInstruction();
+        System.out.format("exec : %02x\n", cpu.PC());
         this.innerExecInstruction();
         tick += cpu.clock; //ajoute un cycle au nombre ticks
+        cpu.incrementPC();
+        System.out.format("-> : %02x\n", cpu.PC());
     }
 
     private void loadInstruction(){

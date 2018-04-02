@@ -1,6 +1,6 @@
 // Cpu.java
 // manque daa
-// LD (rr), nn eput être mal implémenté !!!
+// LD (rr), nn peut être mal implémenté !!!
 // (
 // LD_BCnn()
 // LD_HLnn()
@@ -13,9 +13,14 @@ package gb.cpu;
 import gb.memory;
 
 public class Cpu{
-    private Registers _r = new Registers();
-    private Ram _memory = new Ram();
+    private Registers _r;
+    private Ram _memory;
     private int clock;
+
+    Cpu(Ram ram){
+        _r = new Registers();
+        _memory = ram;
+    }
 
     //interface
     public int PC(){return _memory.getByte(_r.getPC())};
