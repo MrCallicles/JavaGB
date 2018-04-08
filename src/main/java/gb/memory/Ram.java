@@ -2,11 +2,16 @@ package JavaGB.memory;
 
 public class Ram{
     private int[] ram = new int[2^16];
+    private boolean romLoaded;
 
     Ram(){
+        romLoad = false;
     }
 
     public void setByte(int address, int value){
+        //modifie un bit dans la ram
+        //prend en compte le mirroring
+        //0xC000 - 0xCFFF -> 0xE000 -> 0xDFFF
         if(address >= 0xC000 && address <= 0xDE00){
             memory[address] = value;
             memory[address + 0x2000] = value; //echo ram
@@ -16,6 +21,10 @@ public class Ram{
             memory[address - 0x1000] = value; //echo ram
         }
         ram[address] = value & 0xff; //check que la valeur d'entrée est sur 8 bits
+    }
+
+    public boolean romLoaded{
+        return romLoad;
     }
 
     public int getByte(int address){
@@ -39,12 +48,20 @@ public class Ram{
         //check si la rom est assez petite
         //(pas de gestion des RMB) et
         //charge la rom au début de la ram
-        for(int i = 0; i < rom.length; i++){
-            ram[i] = rom[i];
+        int n = 0x7FFF; //taille rom sur memory map ?? = 32767
+        if(rom.length < n)
+            for(int i = 0; i < rom.length; i++){
+                ram[i] = rom[i];
+            }
+            romLoad = true;
         }
+        else{
+            System.out.println("Rom trop longue");
+        }
+
     }
 
     public void loadRomFile(){
+        //à voir comment on fait en fonction de l'os ?
     }
-
 }

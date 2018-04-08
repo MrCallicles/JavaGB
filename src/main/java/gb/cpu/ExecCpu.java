@@ -1,34 +1,35 @@
 //
-//
+//ExecCpu.java
 //
 package gb.cpu;
 
 class ExecCpu{
 
-    private Cpu cpu;
+    private Operations cpu;
     private int instruction;
     private long tick;
 
     ExecCpu(Ram ram){
-        cpu = new Cpu(ram);
+        cpu = new Operations(ram);
     }
 
-    public int getInstruction(){ return instruction; }
+    public int getInstruction(){
+        return instruction; 
+    }
 
     public void execInstruction(){
-
         this.loadInstruction();
         System.out.format("exec : %02x\n", cpu.PC());
         this.innerExecInstruction();
         tick += cpu.clock; //ajoute un cycle au nombre ticks
         cpu.incrementPC();
-        System.out.format("-> : %02x\n", cpu.PC());
+        System.out.format("next -> : %02x\n", cpu.PC());
     }
 
+    //fonctions privées
     private void loadInstruction(){
         instruction = cpu.PC();
     }
-    //fonctions privées
     private void innerExecInstruction(){
         switch(instruction){
             case 0x00: cpu.NOP(); break;
@@ -71,7 +72,7 @@ class ExecCpu{
             case 0x25: cpu.DEC_h(); break;
             case 0x26: cpu.LD_hn(); break;
             case 0x27: cpu.DAA(); break;
-            case 0x28: break; //JP_Z,N
+            case 0x28: cpu.JP_ZPC(); break;
             case 0x29: cpu.ADD_HLHL(); break;
             case 0x2a: cpu.LDi_aHL(); break;
             case 0x2b: cpu.DEC_HL(); break;
@@ -79,7 +80,7 @@ class ExecCpu{
             case 0x2d: cpu.DEC_l(); break;
             case 0x2e: cpu.LD_ln(); break;
             case 0x2f: cpu.CPL(); break;
-            case 0x30: break; //JP_NC,*
+            case 0x30: cpu.JP_CPC(); break;
             case 0x31: cpu.LD_SPnn(); break;
             case 0x32: cpu.LDd_HLa(); break;
             case 0x33: cpu.INC_SP(); break;
@@ -87,7 +88,7 @@ class ExecCpu{
             case 0x35: cpu.DEC_HL(); break;
             case 0x36: cpu.LD_HLn(); break;
             case 0x37: cpu.SCF(); break;
-            case 0x38: break; //JR_C,*
+            case 0x38: cpu.JP_CPC(); break;
             case 0x39: cpu.ADD_HLSP(); break;
             case 0x3a: cpu.LDd_aHL(); break;
             case 0x3b: cpu.DEC_SP(); break;

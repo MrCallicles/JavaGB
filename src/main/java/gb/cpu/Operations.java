@@ -1,4 +1,4 @@
-// Cpu.java
+// Operation.java
 // manque daa
 // LD (rr), nn peut être mal implémenté !!!
 // (
@@ -12,12 +12,12 @@ package gb.cpu;
 
 import gb.memory;
 
-public class Cpu{
+public class Operations{
     private Registers _r;
     private Ram _memory;
     private int clock;
 
-    Cpu(Ram ram){
+    Operations(Ram ram){
         _r = new Registers();
         _memory = ram;
     }
@@ -1298,12 +1298,38 @@ public class Cpu{
             _r.incrementPC();
         }
     }
-    public void JR_PC(){
+    public void JP_ZPC(){
+        int result = _r.getPC();
+        _r.incrementPC();
+        result = (result << 8) + _r.getPC();
+        if(_r.getZFlag()){
+            _r.setPC(result);
+            clock=4;
+        }
+        else{
+            clock=3;
+            _r.incrementPC();
+        }
+    }
+    public void JP_CPC(){
+        int result = _r.getPC();
+        _r.incrementPC();
+        result = (result << 8) + _r.getPC();
+        if(_r.getZFlag()){
+            _r.setPC(result);
+            clock=4;
+        }
+        else{
+            clock=3;
+            _r.incrementPC();
+        }
+    }
+    public void JR_PC(){ //jump relative
         int offset = _r.getPC();
         _r.setPC(_r.getPC() + offset);
         clock=3;
     }
-    public void JR_fPC(){
+    public void JR_fPC(){ //jump relative
         int offset = _r.getPC();
         if(_r.getZFlag() || _r.getCFlag()){
             _r.setPC(_r.getPC() + offset);
