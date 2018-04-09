@@ -1,4 +1,3 @@
-//
 // Register.java
 // Contient tous les registres
 // du CPU ainsi que des getters et setters
@@ -7,7 +6,7 @@
 // AF, DE, HL
 // Inclue aussi le registre Flag
 //
-package JavaGB.cpu;
+package gb.cpu;
 
 import static JavaGB.cpu.Utils.setBit;
 

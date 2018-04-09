@@ -3,25 +3,27 @@
 //
 package gb.cpu;
 
-class ExecCpu{
+import gb.memory.*;
+
+public class ExecCpu{
 
     private Operations cpu;
     private int instruction;
     private long tick;
 
-    ExecCpu(Ram ram){
+    public ExecCpu(Ram ram){
         cpu = new Operations(ram);
     }
 
     public int getInstruction(){
-        return instruction; 
+        return instruction;
     }
 
     public void execInstruction(){
         this.loadInstruction();
         System.out.format("exec : %02x\n", cpu.PC());
         this.innerExecInstruction();
-        tick += cpu.clock; //ajoute un cycle au nombre ticks
+        tick += cpu.clock(); //ajoute un cycle au nombre ticks
         cpu.incrementPC();
         System.out.format("next -> : %02x\n", cpu.PC());
     }
@@ -86,7 +88,7 @@ class ExecCpu{
             case 0x33: cpu.INC_SP(); break;
             case 0x34: cpu.INC_HL(); break;
             case 0x35: cpu.DEC_HL(); break;
-            case 0x36: cpu.LD_HLn(); break;
+            case 0x36: cpu.LD_HLPC(); break;
             case 0x37: cpu.SCF(); break;
             case 0x38: cpu.JP_CPC(); break;
             case 0x39: cpu.ADD_HLSP(); break;
@@ -183,7 +185,7 @@ class ExecCpu{
             case 0x94: cpu.SUB_ah(); break;
             case 0x95: cpu.SUB_al(); break;
             case 0x96: cpu.SUB_aHL(); break;
-            case 0x97: cpu.SUB_a(); break;
+            case 0x97: cpu.SUB_aa(); break;
             case 0x98: cpu.SBC_ab(); break;
             case 0x99: cpu.SBC_ac(); break;
             case 0x9a: cpu.SBC_ad(); break;
@@ -236,7 +238,7 @@ class ExecCpu{
             case 0xc9: cpu.RET(); break;
             case 0xca: break; //JP Z, a16
             case 0xcb: cpu.incrementPC();
-                       cpu.loadInstruction();
+                       this.loadInstruction();
                        innerExecBCFunction();
                        break;
             case 0xcc: cpu.CALL_ZPC(); break;
@@ -257,7 +259,7 @@ class ExecCpu{
             case 0xdb: break;
             case 0xdc: cpu.CALL_CPC(); break;
             case 0xdd: break;
-            case 0xde: cpu.SBC_an(); break;
+            case 0xde: cpu.SBC_aPC(); break;
             case 0xdf: cpu.RST_18(); break;
             case 0xe0: cpu.LD_IOa(); break;
             case 0xe1: cpu.POP_HL(); break;

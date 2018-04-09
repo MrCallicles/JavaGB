@@ -1,1 +1,8 @@
 *.class
+*.jar
+
+# gradle
+.gradle/
+/build/
+!gradle-wrapper.jar
+

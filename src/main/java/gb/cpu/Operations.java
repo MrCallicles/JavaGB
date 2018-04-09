@@ -10,7 +10,7 @@
 //
 package gb.cpu;
 
-import gb.memory;
+import gb.memory.*;
 
 public class Operations{
     private Registers _r;
@@ -23,12 +23,12 @@ public class Operations{
     }
 
     //interface
-    public int PC(){return _memory.getByte(_r.getPC())};
-    public int incrementPC(){_r.incrementPC();};
-    public int clock(){return clock};
+    public int PC(){return _memory.getByte(_r.getPC());};
+    public void incrementPC(){_r.incrementPC();};
+    public int clock(){return clock;};
     public int[] getRam(){
         int[] ram = new int[2^16];
-        for(int i= 0; i < 2^16; i++)
+        for(int i= 0; i < (2^16); i++)
         {
             ram[i] = _memory.getByte(i);
         }
@@ -125,7 +125,7 @@ public class Operations{
     public void LD_ann(){
         int address = _r.getPC();
         _r.incrementPC();
-        int address = address << 8 + _r.getPC();
+        address = address << 8 + _r.getPC();
         _r.incrementPC();
         _r.setA(_memory.getByte(address));
         clock=4;
@@ -905,7 +905,7 @@ public class Operations{
     }
     public void RRC_HL(){
         int result = (_memory.getByte(_r.getHL()) >> 1);
-        int carry = (_memory.getBYte(_r.getHL()) << 7);
+        int carry = (_memory.getByte(_r.getHL()) << 7);
         result += carry;
         if((_memory.getByte(_r.getHL()) & 0x1) == 1){_r.setCFlag(true);}{_r.setCFlag(false);}
         _memory.setByte(_r.getHL(), result);
@@ -997,7 +997,7 @@ public class Operations{
     public void SLA_HL(){
         int result = _memory.getByte(_r.getHL()) << 1;
         if((_memory.getByte(_r.getHL()) >> 7) == 1){_r.setCFlag(true);}else{_r.setCFlag(false);}
-        _memory.getByte(_r.getHL(), result);
+        _memory.setByte(_r.getHL(), result);
         if(result == 0){_r.setZFlag(true);}else{_r.setZFlag(false);}
         clock=4;
     }
