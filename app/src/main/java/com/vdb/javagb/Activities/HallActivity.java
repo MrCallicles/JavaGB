@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class HallActivity extends AppCompatActivity {
+    private String pathRom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class HallActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(HallActivity.this, DebuggerActivity.class);
+                intent.putExtra("pathRom", pathRom);
                 startActivity(intent);
             }
         });
@@ -73,30 +75,11 @@ public class HallActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data == null || requestCode != 22)return;
         Uri uri = data.getData();
-        readTextFile(uri);
-        String Fpath = data.getDataString();
+
+        pathRom = data.getDataString();
 
         TextView textViewFile = (TextView)findViewById(R.id.textViewFile);
-        textViewFile.setText(Fpath);
+        textViewFile.setText(pathRom);
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void readTextFile(Uri uri) {
-        InputStream inputStream = null;
-        try {
-            inputStream = getContentResolver().openInputStream(uri);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    inputStream));
-
-            String line;
-            Log.i("","open text file - content"+"\n");
-            while ((line = reader.readLine()) != null) {
-                Log.i("FileApp",line+"\n");
-            }
-            reader.close();
-            inputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

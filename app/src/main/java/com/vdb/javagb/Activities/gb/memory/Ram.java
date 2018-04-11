@@ -1,5 +1,10 @@
 package com.vdb.javagb.Activities.gb.memory;
 
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
 public class Ram{
     private int[] ram = new int[0xFFFF];
     private boolean romLoaded;
@@ -40,25 +45,6 @@ public class Ram{
     public int getWord(int address){
         return ram[address] << 8 + ram[address + 1];
     }
-
-    public void loadRomArray(int[] rom){
-        //Charge une rom depuis un Array de
-        //chiffres binaires
-        //
-        //check si la rom est assez petite
-        //(pas de gestion des RMB) et
-        //charge la rom au début de la ram
-        int n = 0x7FFF; //taille rom sur memory map ?? = 32767
-        if(rom.length < n) {
-            for(int i = 0; i < rom.length; i++){
-                ram[i] = rom[i];
-            }
-            romLoaded = true;
-        }
-        else{
-            System.out.println("Rom trop longue");
-        }
-        }
 
     public void loadRomArray(int[] rom){
         //Charge une rom depuis un Array de
