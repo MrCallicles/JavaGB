@@ -3,8 +3,7 @@
 //
 package com.vdb.javagb.Activities.gb.cpu;
 
-
-import com.vdb.javagb.Activities.gb.memory.Ram;
+import com.vdb.javagb.Activities.gb.memory.*;
 
 public class ExecCpu{
 
@@ -12,8 +11,8 @@ public class ExecCpu{
     private int instruction;
     private long tick;
 
-    public ExecCpu(Ram ram){
-        cpu = new Operations(ram);
+    public ExecCpu(Ram ram, Registers registers){
+        cpu = new Operations(ram, registers);
     }
 
     public int getInstruction(){
@@ -22,7 +21,7 @@ public class ExecCpu{
 
     public void execInstruction(){
         this.loadInstruction();
-        System.out.format("exec : %02x\n", cpu.PC());
+        //System.out.format("exec : %02x\n", cpu.PC());
         this.innerExecInstruction();
         tick += cpu.clock(); //ajoute un cycle au nombre ticks
         cpu.incrementPC();
@@ -240,6 +239,7 @@ public class ExecCpu{
             case 0xca: break; //JP Z, a16
             case 0xcb: cpu.incrementPC();
                        this.loadInstruction();
+                       System.out.println("CB instruction !");
                        innerExecBCFunction();
                        break;
             case 0xcc: cpu.CALL_ZPC(); break;
