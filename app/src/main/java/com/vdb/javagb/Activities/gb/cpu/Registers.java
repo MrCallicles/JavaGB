@@ -17,7 +17,7 @@ public class Registers{
     private boolean ime;
     private int flags;
 
-    Registers(){
+    public Registers(){
         this.reset();
     }
 

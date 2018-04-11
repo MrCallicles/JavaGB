@@ -10,15 +10,15 @@
 //
 package com.vdb.javagb.Activities.gb.cpu;
 
-import com.vdb.javagb.Activities.gb.memory.Ram;
+import com.vdb.javagb.Activities.gb.memory.*;
 
 public class Operations{
     private Registers _r;
     private Ram _memory;
     private int clock;
 
-    Operations(Ram ram){
-        _r = new Registers();
+    Operations(Ram ram, Registers registers){
+        _r = registers;
         _memory = ram;
     }
 

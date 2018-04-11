@@ -1,9 +1,10 @@
 package com.vdb.javagb.Activities.gb.memory;
 
 import java.io.DataInputStream;
-import java.io.File;
 import java.io.FileInputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.FileNotFoundException;
 
 public class Ram{
     private int[] ram = new int[0xFFFF];
