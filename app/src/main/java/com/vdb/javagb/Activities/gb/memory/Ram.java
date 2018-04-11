@@ -64,7 +64,7 @@ public class Ram{
         else{
             System.out.println("Rom trop longue");
         }
-        }
+    }
 
         public void loadRomFile(String pathRom){
             //charge une rom depuis un fichier
