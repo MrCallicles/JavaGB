@@ -27,7 +27,7 @@ public class FullGB{
     public FullGB(String pathRom){
         resetBreakpoints();
         Ram ram = new Ram();
-        //ram.loadRomFile(pathRom);
+        ram.loadRomFile(pathRom);
         ExecCpu cpu = new ExecCpu(ram);
         InfoRom infos = new InfoRom(ram);
     }

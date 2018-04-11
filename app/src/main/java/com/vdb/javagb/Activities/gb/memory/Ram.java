@@ -60,7 +60,50 @@ public class Ram{
         }
         }
 
-        public void loadRomFile(){
+    public void loadRomArray(int[] rom){
+        //Charge une rom depuis un Array de
+        //chiffres binaires
+        //
+        //check si la rom est assez petite
+        //(pas de gestion des RMB) et
+        //charge la rom au début de la ram
+        int n = 0x7FFF; //taille rom sur memory map ?? = 32767
+        if(rom.length < n) {
+            for(int i = 0; i < rom.length; i++){
+                ram[i] = rom[i];
+            }
+            romLoaded = true;
+        }
+        else{
+            System.out.println("Rom trop longue");
+        }
+        }
+
+        public void loadRomFile(String pathRom){
+            //charge une rom depuis un fichier
+            int n = 0x7FFF; //taille rom sur memory map ?? = 32767
+            File file = new File(pathRom);
+            System.out.println(file);
+            try{
+                byte[] rom = new byte[(int) file.length()];
+                DataInputStream dis = new DataInputStream(new
+                        FileInputStream(file));
+                dis.readFully(rom);
+                dis.close();
+                if(rom.length > n){
+                    for(int i = 0; i < n; i++){
+                        ram[i] = (int)rom[i];
+                    }
+                }else{
+                    for(int i = 0; i < rom.length; i++){
+                        ram[i] = (int)rom[i];
+                    }
+                }
+
+            }
+            catch (IOException e){
+                System.out.println(e.toString());
+            }
         }
 
     }
