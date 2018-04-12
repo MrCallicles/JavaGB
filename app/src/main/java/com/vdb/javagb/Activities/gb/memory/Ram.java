@@ -1,5 +1,7 @@
 package com.vdb.javagb.Activities.gb.memory;
 
+import android.util.Log;
+
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.File;
@@ -70,11 +72,10 @@ public class Ram{
             //charge une rom depuis un fichier
             int n = 0x7FFF; //taille rom sur memory map ?? = 32767
             File file = new File(pathRom);
-            System.out.println(file);
+            if (file.exists())
             try{
                 byte[] rom = new byte[(int) file.length()];
-                DataInputStream dis = new DataInputStream(new
-                        FileInputStream(file));
+                DataInputStream dis = new DataInputStream(new FileInputStream(file));
                 dis.readFully(rom);
                 dis.close();
                 if(rom.length > n){
@@ -87,9 +88,12 @@ public class Ram{
                     }
                 }
 
+            }catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                Log.i("loadRomFile", e.getMessage());
             }
             catch (IOException e){
-                System.out.println(e.toString());
+                Log.i("loadRomFile", e.getMessage());
             }
         }
 
