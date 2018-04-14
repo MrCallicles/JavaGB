@@ -35,37 +35,41 @@ public class FullGB{
         this.resetBreakpoints();
     }
 
-    final protected void addBreakpoint(int address){
+    final public void addBreakpoint(int address){
         if((address >= 0) && (address <= 0xFFFF)){
             breakpoints[address] = true;
         }
     }
 
-    final protected void clearBreakpoint(int address){
+    final public void clearBreakpoint(int address){
         if((address >= 0) && (address <= 0xFFFF)){
             breakpoints[address] = false;
         }
     }
 
-    final protected void resetBreakpoints(){
+    final public void resetBreakpoints(){
         for(int i = 0; i < 0xFFFF; i++){
             breakpoints[i] = false;
         }
     }
 
-    public void run(){
+    public boolean run(){
+        //return true when
+        //get a breakpoint
         while(true){
             if (breakpoints[cpu.getInstruction()]){
                 //break
                 System.out.format("break at %02x\n",
                         cpu.getInstruction());
-                breakProcedure();
+                return true;
             }
             cpu.execInstruction();
         }
+        return false;
     }
 
-    protected void breakProcedure(){
+    public void step(){
+        cpu.execInstruction();
     }
 
     public void showRegisters(){
