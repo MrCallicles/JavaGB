@@ -11,7 +11,7 @@ import java.io.FileNotFoundException;
 public class Ram{
     private int[] ram = new int[0xFFFF];
     private boolean romLoaded;
-    private romSize;
+    private int romSize;
 
     public Ram(){
         romLoaded = false;
@@ -100,7 +100,7 @@ public class Ram{
             }
         }
 
-        public void getRomSize(){
+        public int getRomSize(){
             return this.romSize;
         }
 

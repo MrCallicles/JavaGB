@@ -65,7 +65,6 @@ public class FullGB{
             }
             cpu.execInstruction();
         }
-        return false;
     }
 
     public void step(){
