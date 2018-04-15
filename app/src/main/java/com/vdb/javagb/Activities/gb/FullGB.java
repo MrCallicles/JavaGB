@@ -53,14 +53,16 @@ public class FullGB{
         }
     }
 
+
+
     public boolean run(){
         //return true when
         //get a breakpoint
         while(true){
-            if (breakpoints[cpu.getInstruction()]){
+            if (breakpoints[cpu.getPCAddress()]){
                 //break
                 System.out.format("break at %02x\n",
-                        cpu.getInstruction());
+                        cpu.getPCAddress());
                 return true;
             }
             cpu.execInstruction();

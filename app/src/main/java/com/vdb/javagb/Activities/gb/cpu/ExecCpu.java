@@ -18,6 +18,7 @@ public class ExecCpu{
     public int getInstruction(){
         return instruction;
     }
+    public int getPCAddress(){ return cpu.getPCAddress();};
 
     public void execInstruction(){
         this.loadInstruction();
