@@ -21,7 +21,7 @@ public class ExecCpu{
 
     public void execInstruction(){
         this.loadInstruction();
-        //System.out.format("exec : %02x\n", cpu.PC());
+        System.out.format("exec : %02x\n", cpu.PC());
         this.innerExecInstruction();
         tick += cpu.clock(); //ajoute un cycle au nombre ticks
         cpu.incrementPC();

@@ -1,10 +1,17 @@
 package Entity;
 
+import android.graphics.Path;
+
 public class Operator {
     private int id;
     private String libelle;
 
     public Operator(){}
+
+    public Operator(Operator operator){
+        this.id = operator.getId();
+        this.libelle = operator.getLibelle();
+    }
 
     public Operator(String libelle) {
         this.libelle = libelle;
@@ -24,5 +31,9 @@ public class Operator {
 
     public void setLibelle(String libelle) {
         this.libelle = libelle;
+    }
+
+    public String getRow(){
+        return "ID : "+id+"; LIBELLE : "+libelle;
     }
 }

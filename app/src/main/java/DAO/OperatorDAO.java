@@ -4,6 +4,10 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import Entity.Instruction;
 import Entity.Operator;
 
 public class OperatorDAO {
@@ -53,10 +57,22 @@ public class OperatorDAO {
         return cursorToOperator(c);
     }
 
+    public List<Operator> getAll(){
+        Cursor c = db.query(TABLE_OPERATOR, columns, null, null, null, null, null);
+        List<Operator> l = new ArrayList<>();
+        while (!c.isAfterLast() && !c.isClosed()){
+            l.add(cursorToOperator(c));
+        }
+        return l;
+    }
+
     //Cette méthode permet de convertir un cursor en une question
     private Operator cursorToOperator(Cursor c){
-        if (c.getCount() == 0)
+        if (c.getCount() == 0){
+            c.close();
             return null;
+        }
+
 
         if (c.isBeforeFirst())
             c.moveToFirst();

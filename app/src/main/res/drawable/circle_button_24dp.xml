@@ -2,11 +2,11 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape
-            android:shape="ring"
-            android:innerRadius="24dp"
+            android:shape="oval"
+            android:innerRadius="32dp"
             android:thickness="1dp"
             android:useLevel="false">
-            <solid android:color="@color/Black"/>
+            <solid android:color="@color/GBPurple"/>
         </shape>
     </item>
 </selector>

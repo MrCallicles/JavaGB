@@ -7,6 +7,12 @@ public class Instruction {
 
     public Instruction(){}
 
+    public Instruction(Instruction instruction){
+        this.id = instruction.getId();
+        this.libelle = instruction.getLibelle();
+        this.description = instruction.getDescription();
+    }
+
     public Instruction(String libelle, String description) {
         this.libelle = libelle;
         this.description = description;
@@ -34,5 +40,9 @@ public class Instruction {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getRow(){
+        return "ID : "+id+"; LIBELLE : "+libelle+"; DESCRIPTION : "+description;
     }
 }
