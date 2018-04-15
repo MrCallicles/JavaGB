@@ -73,7 +73,7 @@ public class Ram{
         public void loadRomFile(String pathRom){
             //charge une rom depuis un fichier
             int n = 0x7FFF; //taille rom sur memory map ?? = 32767
-            File file = new File("/storage/emulated/0/Documents/Tetris%20(World).gb");
+            File file = new File(pathRom);
             if (file.exists())
             try{
                 byte[] rom = new byte[(int) file.length()];

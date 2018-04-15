@@ -23,9 +23,11 @@ public class Operations{
     }
 
     //interface
-    public int PC(){return _memory.getByte(_r.getPC());};
-    public void incrementPC(){_r.incrementPC();};
-    public int clock(){return clock;};
+    public int PC(){return _memory.getByte(_r.getPC());}
+    public int getPCAddress(){return _r.getPC();}
+    public void incrementPC(){_r.incrementPC();}
+    public int clock(){return clock;}
+
     public int[] getRam(){
         int[] ram = new int[2^16];
         for(int i= 0; i < (2^16); i++)
