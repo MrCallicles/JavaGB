@@ -67,8 +67,10 @@ public class FullGB{
         }
     }
 
-    public void step(){
+    public int step(){
+        int address = cpu.getInstruction();
         cpu.execInstruction();
+        return address;
     }
 
     public void showRegisters(){

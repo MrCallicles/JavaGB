@@ -3,10 +3,12 @@ package com.vdb.javagb.Activities;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.vdb.javagb.Activities.Utils.ExecRecyclerAdapter;
@@ -25,6 +27,7 @@ public class DebuggerActivity extends AppCompatActivity {
     private List<OpCode> mOpCodes;
     private FullGB mFullGb;
     private ManageGBDB mGbdb;
+    private ExecRecyclerAdapter.ViewHolder step;
     private int currentAddress;
 
     @Override
@@ -49,11 +52,23 @@ public class DebuggerActivity extends AppCompatActivity {
             }
         });
 
+        final RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(this) {
+            @Override protected int getVerticalSnapPreference() {
+                return LinearSmoothScroller.SNAP_TO_START;
+            }
+        };
+
         ImageView buttonStep = (ImageView)findViewById(R.id.buttonStep);
         buttonStep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mFullGb.step();
+                int address = mFullGb.step();
+                if (step != null) step.mLinearLayout.setBackground(null);
+                step = (ExecRecyclerAdapter.ViewHolder) mRecyclerView.findViewHolderForAdapterPosition(20);
+                smoothScroller.setTargetPosition(20);
+                mLayoutManager.startSmoothScroll(smoothScroller);
+                Log.i("address", ""+address);
+                step.mLinearLayout.setBackgroundColor(getColor(R.color.GBDarkGrey));
             }
         });
     }
