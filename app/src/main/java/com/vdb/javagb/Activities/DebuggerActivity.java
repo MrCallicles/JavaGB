@@ -53,7 +53,7 @@ public class DebuggerActivity extends AppCompatActivity {
         buttonStep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mFullGb.exec();
+                mFullGb.step();
             }
         });
     }

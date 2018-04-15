@@ -47,29 +47,28 @@ public class FullGB{
         }
     }
 
-    final protected void resetBreakpoints(){
+    final public void resetBreakpoints(){
         for(int i = 0; i < 0xFFFF; i++){
             breakpoints[i] = false;
         }
     }
 
-    public void run(){
+    public boolean run(){
+        //return true when
+        //get a breakpoint
         while(true){
             if (breakpoints[cpu.getInstruction()]){
                 //break
                 System.out.format("break at %02x\n",
                         cpu.getInstruction());
-                breakProcedure();
+                return true;
             }
             cpu.execInstruction();
         }
     }
 
-    public int getAddress(){
-        return cpu.getInstruction();
-    }
-
-    protected void breakProcedure(){
+    public void step(){
+        cpu.execInstruction();
     }
 
     public void showRegisters(){
@@ -84,8 +83,8 @@ public class FullGB{
         System.out.format("SP:%02x\n", registers.getSP());
     }
 
-    //fonctions privées (exec mise en public pour test)
-    public void exec(){
+    //fonctions privées
+    private void exec(){
         cpu.execInstruction();
     }
 

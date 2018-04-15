@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 public class Ram{
     private int[] ram = new int[0xFFFF];
     private boolean romLoaded;
+    private int romSize;
 
     public Ram(){
         romLoaded = false;
@@ -57,6 +58,7 @@ public class Ram{
         //(pas de gestion des RMB) et
         //charge la rom au début de la ram
         int n = 0x7FFF; //taille rom sur memory map ?? = 32767
+        this.romSize = rom.length;
         if(rom.length < n) {
             for(int i = 0; i < rom.length; i++){
                 ram[i] = rom[i];
@@ -78,6 +80,7 @@ public class Ram{
                 DataInputStream dis = new DataInputStream(new FileInputStream(file));
                 dis.readFully(rom);
                 dis.close();
+                this.romSize = rom.length;
                 if(rom.length > n){
                     for(int i = 0; i < n; i++){
                         ram[i] = (int)rom[i];
@@ -94,6 +97,10 @@ public class Ram{
             catch (IOException e){
                 Log.i("loadRomFile", e.getMessage());
             }
+        }
+
+        public int getRomSize(){
+            return this.romSize;
         }
 
     }
