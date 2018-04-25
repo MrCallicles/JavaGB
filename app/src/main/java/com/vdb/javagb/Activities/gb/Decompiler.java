@@ -29,7 +29,20 @@ public class Decompiler{
     public String formatHexa(int hexa){
         return String.format("%2x", hexa);
     }
+    
+    public ArrayList<String> decompileRom(){
+        ArrayList<String> tmp = new ArrayList();
+        this.loadInstruction();
+        for(int i = 0; i < 0x7FFF; i++){
+            tmp.append(decompileInstruction(this.instruction));
+            this.incrementPC();
+            this.loadInstruction();
+        }
+    }
 
+    //les fonctions consOpcode construisent les strings à partir
+    //de paramètre, on peut toujours modifier la construction
+    //plus tard
     public String consOpcode(String mnemo, String opA, String opB){
         return String.format("%s %s,%s" mnemo, opA, opB);
     }
