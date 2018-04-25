@@ -6,7 +6,6 @@ import com.vdb.javagb.Activities.gb.memory.Ram;
 
 public class Decompiler{
     private Ram _memory;
-    private ArrayList<String> decompileString;
     private Registers registers;
     private int pc;
     private int instruction;
@@ -15,7 +14,6 @@ public class Decompiler{
         this.pc = 0;
         this.instruction = 0;
         this._memory = ram;
-        this.decompileString = new ArrayList<String>();
     }
 
     public loadInstruction(){
@@ -38,6 +36,7 @@ public class Decompiler{
             this.incrementPC();
             this.loadInstruction();
         }
+        return tmp;
     }
 
     //les fonctions consOpcode construisent les strings à partir
