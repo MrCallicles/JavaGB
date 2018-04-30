@@ -29,7 +29,7 @@ public class Decompiler{
     private String formatHexa(int hexa){
         return String.format("%2x", hexa);
     }
-    
+
     public ArrayList<String> decompileRom(){
         ArrayList<String> tmp = new ArrayList();
         this.loadInstruction();
@@ -44,14 +44,14 @@ public class Decompiler{
     //les fonctions consOpcode construisent les strings à partir
     //de paramètre, on peut toujours modifier la construction
     //plus tard
-    private String consOpcode(String mnemo, String opA, String opB){
-        return String.format("%s %s,%s", mnemo, opA, opB);
+    private String[] consOpcode(String mnemo, String opA, String opB){
+        return String[] {mnemo, opA, opB};
     }
     private String consOpcode(String mnemo, String op){
-        return String.format("%s %s", mnemo, op);
+        return String[] {mnemo, op, ""};
     }
     private String consOpcode(String mnemo){
-        return String.format("%s", mnemo);
+        return String[] {mnemo, "", ""};
     }
 
     private String opOctet(){
@@ -65,8 +65,8 @@ public class Decompiler{
         this.incrementPC();
         return "0x" + acc + formatHexa(_memory.getByte(this.pc));
     }
-    
-    public String decompileInstruction(){
+
+    public String[] decompileInstruction(){
         switch(this.instruction){
             case 0x00: return consOpcode("NOP");
             case 0x01: return consOpcode("LD", "BC", opWord());
@@ -134,132 +134,132 @@ public class Decompiler{
             case 0x3f: return consOpcode("CCF");
             case 0x40: return consOpcode("LD","b","b");
             case 0x41: return consOpcode("LD","b","c");
-            case 0x42: return consOpcode("LD","b","d"); 
-            case 0x43: return consOpcode("LD","b","e"); 
-            case 0x44: return consOpcode("LD","b","h"); 
-            case 0x45: return consOpcode("LD","b","l"); 
-            case 0x46: return consOpcode("LD","b","HL"); 
-            case 0x47: return consOpcode("LD","b","a");  
-            case 0x48: return consOpcode("LD","c","b"); 
-            case 0x49: return consOpcode("LD","c","c"); 
-            case 0x4a: return consOpcode("LD","c","d"); 
-            case 0x4b: return consOpcode("LD","c","e"); 
-            case 0x4c: return consOpcode("LD","c","h"); 
-            case 0x4d: return consOpcode("LD","c","l"); 
+            case 0x42: return consOpcode("LD","b","d");
+            case 0x43: return consOpcode("LD","b","e");
+            case 0x44: return consOpcode("LD","b","h");
+            case 0x45: return consOpcode("LD","b","l");
+            case 0x46: return consOpcode("LD","b","HL");
+            case 0x47: return consOpcode("LD","b","a");
+            case 0x48: return consOpcode("LD","c","b");
+            case 0x49: return consOpcode("LD","c","c");
+            case 0x4a: return consOpcode("LD","c","d");
+            case 0x4b: return consOpcode("LD","c","e");
+            case 0x4c: return consOpcode("LD","c","h");
+            case 0x4d: return consOpcode("LD","c","l");
             case 0x4e: return consOpcode("LD","c","HL");
-            case 0x4f: return consOpcode("LD","c","a"); 
-            case 0x50: return consOpcode("LD","d","b"); 
-            case 0x51: return consOpcode("LD","d","c"); 
-            case 0x52: return consOpcode("LD","d","d"); 
-            case 0x53: return consOpcode("LD","d","e"); 
-            case 0x54: return consOpcode("LD","d","h"); 
-            case 0x55: return consOpcode("LD","d","l"); 
+            case 0x4f: return consOpcode("LD","c","a");
+            case 0x50: return consOpcode("LD","d","b");
+            case 0x51: return consOpcode("LD","d","c");
+            case 0x52: return consOpcode("LD","d","d");
+            case 0x53: return consOpcode("LD","d","e");
+            case 0x54: return consOpcode("LD","d","h");
+            case 0x55: return consOpcode("LD","d","l");
             case 0x56: return consOpcode("LD","d","HL");
-            case 0x57: return consOpcode("LD","d","a"); 
-            case 0x58: return consOpcode("LD","e","b"); 
-            case 0x59: return consOpcode("LD","e","c"); 
-            case 0x5a: return consOpcode("LD","e","d"); 
-            case 0x5b: return consOpcode("LD","e","e"); 
-            case 0x5c: return consOpcode("LD","e","h"); 
-            case 0x5d: return consOpcode("LD","e","l"); 
+            case 0x57: return consOpcode("LD","d","a");
+            case 0x58: return consOpcode("LD","e","b");
+            case 0x59: return consOpcode("LD","e","c");
+            case 0x5a: return consOpcode("LD","e","d");
+            case 0x5b: return consOpcode("LD","e","e");
+            case 0x5c: return consOpcode("LD","e","h");
+            case 0x5d: return consOpcode("LD","e","l");
             case 0x5e: return consOpcode("LD","e","HL");
-            case 0x5f: return consOpcode("LD","e","a"); 
-            case 0x60: return consOpcode("LD","h","b");  
-            case 0x61: return consOpcode("LD","h","c");  
-            case 0x62: return consOpcode("LD","h","d");  
-            case 0x63: return consOpcode("LD","h","e");  
-            case 0x64: return consOpcode("LD","h","h");  
-            case 0x65: return consOpcode("LD","h","l");  
-            case 0x66: return consOpcode("LD","h","HL"); 
-            case 0x67: return consOpcode("LD","h","a");  
-            case 0x68: return consOpcode("LD","l","b"); 
-            case 0x69: return consOpcode("LD","l","c"); 
-            case 0x6a: return consOpcode("LD","l","d"); 
-            case 0x6b: return consOpcode("LD","l","e"); 
-            case 0x6c: return consOpcode("LD","l","h"); 
-            case 0x6d: return consOpcode("LD","l","l"); 
+            case 0x5f: return consOpcode("LD","e","a");
+            case 0x60: return consOpcode("LD","h","b");
+            case 0x61: return consOpcode("LD","h","c");
+            case 0x62: return consOpcode("LD","h","d");
+            case 0x63: return consOpcode("LD","h","e");
+            case 0x64: return consOpcode("LD","h","h");
+            case 0x65: return consOpcode("LD","h","l");
+            case 0x66: return consOpcode("LD","h","HL");
+            case 0x67: return consOpcode("LD","h","a");
+            case 0x68: return consOpcode("LD","l","b");
+            case 0x69: return consOpcode("LD","l","c");
+            case 0x6a: return consOpcode("LD","l","d");
+            case 0x6b: return consOpcode("LD","l","e");
+            case 0x6c: return consOpcode("LD","l","h");
+            case 0x6d: return consOpcode("LD","l","l");
             case 0x6e: return consOpcode("LD","l","HL");
-            case 0x6f: return consOpcode("LD","l","a"); 
-            case 0x70: return consOpcode("LD","HL","b");  
-            case 0x71: return consOpcode("LD","HL","c");  
-            case 0x72: return consOpcode("LD","HL","d");  
-            case 0x73: return consOpcode("LD","HL","e");  
-            case 0x74: return consOpcode("LD","HL","h");  
-            case 0x75: return consOpcode("LD","HL","l");  
-            case 0x76: return consOpcode("HALT"); 
-            case 0x77: return consOpcode("LD","HL","a");  
-            case 0x78: return consOpcode("LD","a","b");    
-            case 0x79: return consOpcode("LD","a","c");    
-            case 0x7a: return consOpcode("LD","a","d");    
-            case 0x7b: return consOpcode("LD","a","e");    
-            case 0x7c: return consOpcode("LD","a","h");    
-            case 0x7d: return consOpcode("LD","a","l");    
-            case 0x7e: return consOpcode("LD","a","HL");   
-            case 0x7f: return consOpcode("LD","a","a");    
+            case 0x6f: return consOpcode("LD","l","a");
+            case 0x70: return consOpcode("LD","HL","b");
+            case 0x71: return consOpcode("LD","HL","c");
+            case 0x72: return consOpcode("LD","HL","d");
+            case 0x73: return consOpcode("LD","HL","e");
+            case 0x74: return consOpcode("LD","HL","h");
+            case 0x75: return consOpcode("LD","HL","l");
+            case 0x76: return consOpcode("HALT");
+            case 0x77: return consOpcode("LD","HL","a");
+            case 0x78: return consOpcode("LD","a","b");
+            case 0x79: return consOpcode("LD","a","c");
+            case 0x7a: return consOpcode("LD","a","d");
+            case 0x7b: return consOpcode("LD","a","e");
+            case 0x7c: return consOpcode("LD","a","h");
+            case 0x7d: return consOpcode("LD","a","l");
+            case 0x7e: return consOpcode("LD","a","HL");
+            case 0x7f: return consOpcode("LD","a","a");
             case 0x80: return consOpcode("ADD","a","b");
-            case 0x81: return consOpcode("ADD","a","c"); 
-            case 0x82: return consOpcode("ADD","a","d"); 
-            case 0x83: return consOpcode("ADD","a","e"); 
-            case 0x84: return consOpcode("ADD","a","h"); 
-            case 0x85: return consOpcode("ADD","a","l");  
-            case 0x86: return consOpcode("ADD","a","HL");   
-            case 0x87: return consOpcode("ADD","a","a");    
-            case 0x88: return consOpcode("ADC","a","b"); 
-            case 0x89: return consOpcode("ADC","a","c"); 
-            case 0x8a: return consOpcode("ADC","a","d"); 
-            case 0x8b: return consOpcode("ADC","a","e"); 
-            case 0x8c: return consOpcode("ADC","a","h"); 
-            case 0x8d: return consOpcode("ADC","a","l"); 
+            case 0x81: return consOpcode("ADD","a","c");
+            case 0x82: return consOpcode("ADD","a","d");
+            case 0x83: return consOpcode("ADD","a","e");
+            case 0x84: return consOpcode("ADD","a","h");
+            case 0x85: return consOpcode("ADD","a","l");
+            case 0x86: return consOpcode("ADD","a","HL");
+            case 0x87: return consOpcode("ADD","a","a");
+            case 0x88: return consOpcode("ADC","a","b");
+            case 0x89: return consOpcode("ADC","a","c");
+            case 0x8a: return consOpcode("ADC","a","d");
+            case 0x8b: return consOpcode("ADC","a","e");
+            case 0x8c: return consOpcode("ADC","a","h");
+            case 0x8d: return consOpcode("ADC","a","l");
             case 0x8e: return consOpcode("ADC","a","HL");
-            case 0x8f: return consOpcode("ADC","a","a"); 
-            case 0x90: return consOpcode("SUB","a","b");  
-            case 0x91: return consOpcode("SUB","a","c");  
-            case 0x92: return consOpcode("SUB","a","d");  
-            case 0x93: return consOpcode("SUB","a","e");  
-            case 0x94: return consOpcode("SUB","a","h");  
-            case 0x95: return consOpcode("SUB","a","l");  
-            case 0x96: return consOpcode("SUB","a","HL"); 
-            case 0x97: return consOpcode("SUB","a","a");  
-            case 0x98: return consOpcode("ADC","a","b");  
-            case 0x99: return consOpcode("ADC","a","c");  
-            case 0x9a: return consOpcode("SBC","a","d");  
-            case 0x9b: return consOpcode("SBC","a","e");  
-            case 0x9c: return consOpcode("SBC","a","h");  
-            case 0x9d: return consOpcode("SBC","a","l");  
-            case 0x9e: return consOpcode("SBC","a","HL"); 
-            case 0x9f: return consOpcode("SBC","a","a");  
-            case 0xa0: return consOpcode("AND","a","b");     
-            case 0xa1: return consOpcode("AND","a","c");     
-            case 0xa2: return consOpcode("AND","a","d");     
-            case 0xa3: return consOpcode("AND","a","e");     
-            case 0xa4: return consOpcode("AND","a","h");     
-            case 0xa5: return consOpcode("AND","a","l");     
-            case 0xa6: return consOpcode("AND","a","HL");    
-            case 0xa7: return consOpcode("AND","a","a");     
-            case 0xa8: return consOpcode("XOR","a","b"); 
-            case 0xa9: return consOpcode("XOR","a","c"); 
-            case 0xaa: return consOpcode("XOR","a","d"); 
-            case 0xab: return consOpcode("XOR","a","e"); 
-            case 0xac: return consOpcode("XOR","a","h"); 
-            case 0xad: return consOpcode("XOR","a","l"); 
+            case 0x8f: return consOpcode("ADC","a","a");
+            case 0x90: return consOpcode("SUB","a","b");
+            case 0x91: return consOpcode("SUB","a","c");
+            case 0x92: return consOpcode("SUB","a","d");
+            case 0x93: return consOpcode("SUB","a","e");
+            case 0x94: return consOpcode("SUB","a","h");
+            case 0x95: return consOpcode("SUB","a","l");
+            case 0x96: return consOpcode("SUB","a","HL");
+            case 0x97: return consOpcode("SUB","a","a");
+            case 0x98: return consOpcode("ADC","a","b");
+            case 0x99: return consOpcode("ADC","a","c");
+            case 0x9a: return consOpcode("SBC","a","d");
+            case 0x9b: return consOpcode("SBC","a","e");
+            case 0x9c: return consOpcode("SBC","a","h");
+            case 0x9d: return consOpcode("SBC","a","l");
+            case 0x9e: return consOpcode("SBC","a","HL");
+            case 0x9f: return consOpcode("SBC","a","a");
+            case 0xa0: return consOpcode("AND","a","b");
+            case 0xa1: return consOpcode("AND","a","c");
+            case 0xa2: return consOpcode("AND","a","d");
+            case 0xa3: return consOpcode("AND","a","e");
+            case 0xa4: return consOpcode("AND","a","h");
+            case 0xa5: return consOpcode("AND","a","l");
+            case 0xa6: return consOpcode("AND","a","HL");
+            case 0xa7: return consOpcode("AND","a","a");
+            case 0xa8: return consOpcode("XOR","a","b");
+            case 0xa9: return consOpcode("XOR","a","c");
+            case 0xaa: return consOpcode("XOR","a","d");
+            case 0xab: return consOpcode("XOR","a","e");
+            case 0xac: return consOpcode("XOR","a","h");
+            case 0xad: return consOpcode("XOR","a","l");
             case 0xae: return consOpcode("XOR","a","HL");
-            case 0xaf: return consOpcode("XOR","a","a"); 
-            case 0xb0: return consOpcode("OR","a","b");  
-            case 0xb1: return consOpcode("OR","a","c");  
-            case 0xb2: return consOpcode("OR","a","d");  
-            case 0xb3: return consOpcode("OR","a","e");  
-            case 0xb4: return consOpcode("OR","a","h");  
-            case 0xb5: return consOpcode("OR","a","l");  
-            case 0xb6: return consOpcode("OR","a","HL"); 
-            case 0xb7: return consOpcode("OR","a","a");  
-            case 0xb8: return consOpcode("CP","a","b");   
-            case 0xb9: return consOpcode("CP","a","c");   
-            case 0xba: return consOpcode("CP","a","d");   
-            case 0xbb: return consOpcode("CP","a","e");   
-            case 0xbc: return consOpcode("CP","a","h");   
-            case 0xbd: return consOpcode("CP","a","l");   
-            case 0xbe: return consOpcode("CP","a","HL");  
-            case 0xbf: return consOpcode("CP","a","a");   
+            case 0xaf: return consOpcode("XOR","a","a");
+            case 0xb0: return consOpcode("OR","a","b");
+            case 0xb1: return consOpcode("OR","a","c");
+            case 0xb2: return consOpcode("OR","a","d");
+            case 0xb3: return consOpcode("OR","a","e");
+            case 0xb4: return consOpcode("OR","a","h");
+            case 0xb5: return consOpcode("OR","a","l");
+            case 0xb6: return consOpcode("OR","a","HL");
+            case 0xb7: return consOpcode("OR","a","a");
+            case 0xb8: return consOpcode("CP","a","b");
+            case 0xb9: return consOpcode("CP","a","c");
+            case 0xba: return consOpcode("CP","a","d");
+            case 0xbb: return consOpcode("CP","a","e");
+            case 0xbc: return consOpcode("CP","a","h");
+            case 0xbd: return consOpcode("CP","a","l");
+            case 0xbe: return consOpcode("CP","a","HL");
+            case 0xbf: return consOpcode("CP","a","a");
             case 0xc0: return consOpcode("RETNZ");
             case 0xc1: return consOpcode("POP","BC");
             case 0xc2: return consOpcode("JPNZ",opWord());
@@ -328,7 +328,7 @@ public class Decompiler{
         }
     }
 
-    public String StringDecompileInnerInstruction(){
+    public String[] StringDecompileInnerInstruction(){
         this.incrementPC();
         this.loadInstruction();
         switch(this.instruction) {
