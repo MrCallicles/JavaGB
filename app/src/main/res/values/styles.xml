@@ -22,4 +22,18 @@
         <item name="android:letterSpacing">0.1</item>
     </style>
 
+    <style name="ListLineCheck">
+        <item name="android:background">@color/GBText</item>
+        <item name="android:textColor">@color/GBScreen</item>
+        <item name="android:fontFamily">@font/game_boy</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="ListLineUncheck">
+        <item name="android:background">@color/Transparent</item>
+        <item name="android:textColor">@color/GBText</item>
+        <item name="android:fontFamily">@font/game_boy</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
 </resources>

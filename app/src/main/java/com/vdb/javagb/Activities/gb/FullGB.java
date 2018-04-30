@@ -3,9 +3,13 @@
 //
 package com.vdb.javagb.Activities.gb;
 
+import android.content.Context;
+
 import com.vdb.javagb.Activities.gb.cpu.*;
 import com.vdb.javagb.Activities.gb.memory.*;
 import com.vdb.javagb.Activities.gb.memory.Ram;
+
+import java.io.IOException;
 
 public class FullGB{
     protected boolean[] breakpoints = new boolean[0xFFFF];
@@ -25,10 +29,10 @@ public class FullGB{
         this.resetBreakpoints();
     }
 
-    public FullGB(String pathRom){
+    public FullGB(String pathRom, Context context) {
         ram = new Ram();
         registers = new Registers();
-        ram.loadRomFile(pathRom);
+        ram.loadRomFile(pathRom, context);
         cpu = new ExecCpu(ram, registers);
         infos = new InfoRom(ram);
 
@@ -55,7 +59,7 @@ public class FullGB{
 
 
 
-    public boolean run(){
+    public int run(){
         //return true when
         //get a breakpoint
         while(true){
@@ -63,16 +67,15 @@ public class FullGB{
                 //break
                 System.out.format("break at %02x\n",
                         cpu.getPCAddress());
-                return true;
+                return cpu.getPCAddress();
             }
             cpu.execInstruction();
         }
     }
 
     public int step(){
-        int address = cpu.getInstruction();
         cpu.execInstruction();
-        return address;
+        return cpu.getPCAddress();
     }
 
     public void showRegisters(){

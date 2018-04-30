@@ -27,6 +27,7 @@ public class ExecCpu{
         tick += cpu.clock(); //ajoute un cycle au nombre ticks
         cpu.incrementPC();
         System.out.format("next -> : %02x\n", cpu.PC());
+        System.out.format("next -> : %d\n", cpu.getPCAddress());
     }
 
     //fonctions privées

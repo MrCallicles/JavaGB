@@ -1,34 +1,43 @@
 package com.vdb.javagb.Activities;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.SearchManager;
+
+import android.content.Context;
 import android.content.Intent;
+
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
-import android.os.CountDownTimer;
+
 import android.os.Environment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import android.provider.DocumentsContract;
+import android.provider.OpenableColumns;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+
 import android.util.Log;
+
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
+
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.vdb.javagb.Activities.gb.FullGB;
 import com.vdb.javagb.R;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.net.URI;
 
 import Entity.Instruction;
 import Entity.OpCode;
@@ -36,24 +45,26 @@ import Entity.Operator;
 
 public class HallActivity extends AppCompatActivity {
     private String pathRom;
+    private String filename;
     private ManageGBDB gbdb;
     private TextView txtViewHall;
-    private int j;
+    private static final int READ_REQUEST_CODE = 42;
+    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 21;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hall);
+
         Toolbar appToolbar = (Toolbar) findViewById(R.id.app_toolbar);
         setSupportActionBar(appToolbar);
         getSupportActionBar().setTitle("JavaGB");
+
         gbdb = new ManageGBDB(this);
         txtViewHall = (TextView)findViewById(R.id.textViewScreen);
 
-        Log.i("test", Integer.toHexString(212));
-
-        //addData();
-        showData();
+        //showData();
 
         String path = Environment.getExternalStorageDirectory().toString();
 
@@ -61,6 +72,7 @@ public class HallActivity extends AppCompatActivity {
         imageButtonDebug.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //if (pathRom.isEmpty())return;
                 Intent intent = new Intent(HallActivity.this, DebuggerActivity.class);
                 intent.putExtra("pathRom", pathRom);
                 startActivity(intent);
@@ -71,46 +83,86 @@ public class HallActivity extends AppCompatActivity {
         imageButtonFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("*/*");
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-
-                // special intent for Samsung file manager
-                Intent sIntent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
-                // if you want any file type, you can skip next line
-                sIntent.putExtra("CONTENT_TYPE", "*/*");
-                sIntent.addCategory(Intent.CATEGORY_DEFAULT);
-
-                Intent chooserIntent;
-                if (getPackageManager().resolveActivity(sIntent, 0) != null){
-                    // it is device with samsung file manager
-                    chooserIntent = Intent.createChooser(sIntent, "Open file");
-                    chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { intent});
-                }
-                else {
-                    chooserIntent = Intent.createChooser(intent, "Open file");
-                }
-
-                try {
-                    startActivityForResult(chooserIntent, 22);
-                } catch (android.content.ActivityNotFoundException ex) {
-                    Toast.makeText(getApplicationContext(), "No suitable File Manager was found.", Toast.LENGTH_SHORT).show();
-                }
+                checkPermission();
             }
         });
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (data == null || requestCode != 22)return;
-        Uri uri = data.getData();
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                 Intent resultData) {
 
-        pathRom = data.getDataString();
-        File f = new File(pathRom);
-        String romName = f.getName();
-        txtViewHall.setText(getString(R.string.text_screen));
-        txtViewHall.setText(txtViewHall.getText()+"\n\n\n"+romName);
+        if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
 
-        super.onActivityResult(requestCode, resultCode, data);
+            Uri uri = null;
+            if (resultData != null) {
+                uri = resultData.getData();
+                String mimeType = getContentResolver().getType(uri);
+
+                Cursor returnCursor = getContentResolver().query(uri, null, null, null, null);
+                int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
+                returnCursor.moveToFirst();
+                filename = returnCursor.getString(nameIndex);
+                filename = filename.replace('(', '"');
+                filename = filename.replace(')', '"');
+                filename = filename.replace(".gb", "");
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+
+                if ("primary".equalsIgnoreCase(type)) {
+                    pathRom = Environment.getExternalStorageDirectory() + "/" + split[1];
+                }
+                String size = Long.toString(returnCursor.getLong(sizeIndex));
+
+                Log.i("Uri", "Uri: " + uri.toString());
+                //pathRom = resultData.getDataString();
+                File f = new File(pathRom);
+
+                txtViewHall.setText(getString(R.string.text_screen));
+                txtViewHall.setText(txtViewHall.getText()+"\n\n\n"+filename);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request.
+        }
+    }
+
+        @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.tool_menu, menu);
+
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+
+        return true;
     }
 
     private void showData(){
@@ -129,51 +181,61 @@ public class HallActivity extends AppCompatActivity {
         gbdb.close();
     }
 
-    private void addData(){
-        gbdb.open();
-        /*String[] instructions = new String[] {
-                "LD","LDI","LDD","PUSH","POP","ADD",
-                "ADC","SUB","SBC","AND","XOR","OR",
-                "CP","INC","DEC","DAA","CPL","RLCA",
-                "RRCA","RRA","RLC","RL","RRC","RR",
-                "SLA","SWAP","SRA","SRL","BIT","SET",
-                "RES","NOP","JR","JP","RETI","HALT",
-                "STOP"};
+    public void performFileSearch() {
 
-        String[] operators = new String[] {
-                "a","b","c","d","e",
-                "h","l","AF","BC","DE",
-                "HL","SP","(AF)","(BC)","(DE)",
-                "(HL)","(SP)","n","nn","(nn)",
-                "HALT", "STOP", "IO", "0","1",
-                "2","3","4","5","6",
-                "7","f","38","30","28",
-                "20","18","fC","10","08",
-                "fZ","00","c","(c)","NOP"};
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
 
-        for (int i = 0; i < instructions.length; i++){
-            Instruction instruction = new Instruction();
-            instruction.setLibelle(instructions[i]);
-            gbdb.getDataInstruction().insertInstruction(instruction);
+        intent.setType("application/octet-stream");
+
+        try {
+            startActivityForResult(intent, READ_REQUEST_CODE);
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(getApplicationContext(), "No suitable File Manager was found.", Toast.LENGTH_SHORT).show();
         }
+    }
 
-        for (int i = 0; i < operators.length; i++){
-            Operator operator = new Operator();
-            operator.setLibelle(operators[i]);
-            gbdb.getDataOperator().insertOperator(operator);
-        }*/
+    private void checkPermission(){
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
 
-        /*for (String[] opCode : opCodes){
-            OpCode opC = new OpCode();
-            opC.setHexa_id(opCode[0]);
-            Instruction instruction = gbdb.getDataInstruction().getByLibelle(opCode[1]);
-            opC.setInstruction(instruction);
-            Operator operator = (opCode[2] != null) ? gbdb.getDataOperator().getByLibelle(opCode[2]) : null;
-            opC.setOperatorSrc(operator);
-            Operator operatorBut = (opCode[3] != null) ? gbdb.getDataOperator().getByLibelle(opCode[3]) : null;
-            opC.setOperatorBut(operatorBut);
-            gbdb.getDataOpCode().insertOpCode(opC);
+            Toast.makeText(this, "Permission missing",
+                    Toast.LENGTH_SHORT)
+                    .show();
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                Snackbar.make(txtViewHall, "Accès requis",
+                        Snackbar.LENGTH_INDEFINITE).setAction("ok", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Request the permission
+                        ActivityCompat.requestPermissions(HallActivity.this,
+                                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                    }
+                }).show();
+            } else {
+                // No explanation needed; request the permission
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+
+                // MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+            Toast.makeText(this, "Permission granted",
+                    Toast.LENGTH_SHORT)
+                    .show();
+            performFileSearch();
         }
-        gbdb.close();*/
     }
 }

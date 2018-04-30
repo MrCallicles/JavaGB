@@ -1,5 +1,7 @@
 package com.vdb.javagb.Activities.gb.memory;
 
+import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 
 import java.io.DataInputStream;
@@ -7,6 +9,8 @@ import java.io.FileInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class Ram{
     private int[] ram = new int[0xFFFF];
@@ -70,36 +74,38 @@ public class Ram{
         }
     }
 
-        public void loadRomFile(String pathRom){
-            //charge une rom depuis un fichier
-            int n = 0x7FFF; //taille rom sur memory map ?? = 32767
-            File file = new File(pathRom);
-            if (file.exists())
-            try{
-                byte[] rom = new byte[(int) file.length()];
-                DataInputStream dis = new DataInputStream(new FileInputStream(file));
-                dis.readFully(rom);
-                dis.close();
-                this.romSize = rom.length;
-                if(rom.length > n){
-                    for(int i = 0; i < n; i++){
-                        ram[i] = (int)rom[i];
-                    }
-                }else{
-                    for(int i = 0; i < rom.length; i++){
-                        ram[i] = (int)rom[i];
-                    }
-                }
+    public void loadRomFile(String pathRom, Context context) {
 
-            }catch (FileNotFoundException e) {
-                Log.i("loadRomFile", e.getMessage());
+        //charge une rom depuis un fichier
+        int n = 0x7FFF; //taille rom sur memory map ?? = 32767
+        try{
+            File file = new File(pathRom);
+            FileInputStream fileIn = new FileInputStream(file);
+            byte[] rom = new byte[(int) fileIn.getChannel().size()];
+            DataInputStream dis = new DataInputStream(fileIn);
+            dis.readFully(rom);
+            dis.close();
+            //this.romSize = rom.length;
+            if(rom.length > n){
+                for(int i = 0; i < n; i++){
+                    ram[i] = (int)rom[i];
+                }
+            }else{
+                for(int i = 0; i < rom.length; i++){
+                    ram[i] = (int)rom[i];
+                }
             }
-            catch (IOException e){
-                Log.i("loadRomFile", e.getMessage());
-            }
+            fileIn.close();
+        }catch (FileNotFoundException e) {
+            Log.i("loadRomFile", e.getMessage());
+        }
+        catch (IOException e){
+            Log.i("loadRomFile", e.getMessage());
         }
 
-        public int getRomSize(){
+    }
+
+    public int getRomSize(){
             return this.romSize;
         }
 

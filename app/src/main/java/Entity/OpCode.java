@@ -6,7 +6,9 @@ public class OpCode {
     private Operator operatorSrc;
     private Operator operatorBut;
     private Boolean selected = false;
-    private int position;
+    private Boolean checking = false;
+    private int address = -1;
+    private int position = -1;
 
     public OpCode(){}
 
@@ -65,12 +67,28 @@ public class OpCode {
         return selected;
     }
 
+    public void setChecking(Boolean b){
+        checking = b;
+    }
+
+    public boolean isChecking(){
+        return checking;
+    }
+
     public int getPosition() {
         return position;
     }
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    public int getAddress() {
+        return address;
+    }
+
+    public void setAddress(int address) {
+        this.address = address;
     }
 
     public String getRow(){

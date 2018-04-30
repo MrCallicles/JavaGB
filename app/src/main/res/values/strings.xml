@@ -3,4 +3,6 @@
     <string name="browse_file">Browse file</string>
     <string name="text_screen">JavaGB\n\nSelectionnez une ROM de GameBoy</string>
     <string name="breakpoint">breakpoint</string>
+    <string name="search_title">Rechercher</string>
+    <string name="search_hint">0x31</string>
 </resources>
