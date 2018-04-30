@@ -4,6 +4,8 @@ import com.vdb.javagb.Activities.gb.cpu.*;
 import com.vdb.javagb.Activities.gb.memory.*;
 import com.vdb.javagb.Activities.gb.memory.Ram;
 
+import java.util.ArrayList;
+
 public class Decompiler{
     private Ram _memory;
     private Registers registers;
@@ -16,15 +18,15 @@ public class Decompiler{
         this._memory = ram;
     }
 
-    public loadInstruction(){
-        this.instruction = ram.getByte(this.pc);
+    private void loadInstruction(){
+        this.instruction = _memory.getByte(this.pc);
     }
 
-    public incrementPC(){
+    private void incrementPC(){
         this.pc += 1;
     }
 
-    public String formatHexa(int hexa){
+    private String formatHexa(int hexa){
         return String.format("%2x", hexa);
     }
     
@@ -32,7 +34,7 @@ public class Decompiler{
         ArrayList<String> tmp = new ArrayList();
         this.loadInstruction();
         for(int i = 0; i < 0x7FFF; i++){
-            tmp.append(decompileInstruction(this.instruction));
+            tmp.add(decompileInstruction());
             this.incrementPC();
             this.loadInstruction();
         }
@@ -42,29 +44,29 @@ public class Decompiler{
     //les fonctions consOpcode construisent les strings à partir
     //de paramètre, on peut toujours modifier la construction
     //plus tard
-    public String consOpcode(String mnemo, String opA, String opB){
-        return String.format("%s %s,%s" mnemo, opA, opB);
+    private String consOpcode(String mnemo, String opA, String opB){
+        return String.format("%s %s,%s", mnemo, opA, opB);
     }
-    public String consOpcode(String mnemo, String op){
-        return String.format("%s %s" mnemo, op);
+    private String consOpcode(String mnemo, String op){
+        return String.format("%s %s", mnemo, op);
     }
-    public String consOpcode(String mnemo){
+    private String consOpcode(String mnemo){
         return String.format("%s", mnemo);
     }
 
     private String opOctet(){
         this.incrementPC();
-        return "Ox"+formatHexa(String.valueOf(ram.getByte(this.pc))); 
+        return "Ox"+formatHexa(_memory.getByte(this.pc));
     }
 
     private String opWord(){
         this.incrementPC();
-        String acc = formatHexa(String.valueOf(ram.getByte(this.pc))); 
+        String acc = formatHexa(_memory.getByte(this.pc));
         this.incrementPC();
-        return "0x" + acc + formatHexa(String.valueOf(ram.getByte(this.pc)));
+        return "0x" + acc + formatHexa(_memory.getByte(this.pc));
     }
     
-    public String DecompileInstruction(){
+    public String decompileInstruction(){
         switch(this.instruction){
             case 0x00: return consOpcode("NOP");
             case 0x01: return consOpcode("LD", "BC", opWord());
@@ -322,269 +324,528 @@ public class Decompiler{
             case 0xfd: return consOpcode("NOP");
             case 0xfe: return consOpcode("CP","a",opOctet());
             case 0xff: return consOpcode("RST","38");
+            default: return consOpcode("NOP");
         }
     }
 
-    public StringDecompileInnerInstruction(){
+    public String StringDecompileInnerInstruction(){
         this.incrementPC();
         this.loadInstruction();
-        switch(this.instruction());
-            case 0x00: return consOpcode("RLC","b");
-            case 0x01: return consOpcode("RLC","c"); 
-            case 0x02: return consOpcode("RLC","d"); 
-            case 0x03: return consOpcode("RLC","e"); 
-            case 0x04: return consOpcode("RLC","h"); 
-            case 0x05: return consOpcode("RLC","l"); 
-            case 0x06: return consOpcode("RLC","HL"); 
-            case 0x07: return consOpcode("RLC","a"); 
-            case 0x08: return consOpcode("RRC","b");   
-            case 0x09: return consOpcode("RRC","c");   
-            case 0x0a: return consOpcode("RRC","d");   
-            case 0x0b: return consOpcode("RRC","e");   
-            case 0x0c: return consOpcode("RRC","h");   
-            case 0x0d: return consOpcode("RRC","l");   
-            case 0x0e: return consOpcode("RRC","HL");  
-            case 0x0f: return consOpcode("RRC","a");   
-            case 0x10: return consOpcode("RL","b");   
-            case 0x11: return consOpcode("RL","c");   
-            case 0x12: return consOpcode("RL","d");   
-            case 0x13: return consOpcode("RL","e");   
-            case 0x14: return consOpcode("RL","h");   
-            case 0x15: return consOpcode("RL","l");   
-            case 0x16: return consOpcode("RL","HL");  
-            case 0x17: return consOpcode("RL","a");   
-            case 0x18: return consOpcode("RR","b");    
-            case 0x19: return consOpcode("RR","c");    
-            case 0x1a: return consOpcode("RR","d");    
-            case 0x1b: return consOpcode("RR","e");    
-            case 0x1c: return consOpcode("RR","h");    
-            case 0x1d: return consOpcode("RR","l");    
-            case 0x1e: return consOpcode("RR","HL");   
-            case 0x1f: return consOpcode("RR","a");    
-            case 0x20: return consOpcode("SLA","b");    
-            case 0x21: return consOpcode("SLA","c");    
-            case 0x22: return consOpcode("SLA","d");    
-            case 0x23: return consOpcode("SLA","e");    
-            case 0x24: return consOpcode("SLA","h");    
-            case 0x25: return consOpcode("SLA","l");    
-            case 0x26: return consOpcode("SLA","HL");   
-            case 0x27: return consOpcode("SLA","a");    
-            case 0x28: return consOpcode("SRA","b"); 
-            case 0x29: return consOpcode("SRA","c"); 
-            case 0x2a: return consOpcode("SRA","d"); 
-            case 0x2b: return consOpcode("SRA","e"); 
-            case 0x2c: return consOpcode("SRA","h"); 
-            case 0x2d: return consOpcode("SRA","l"); 
-            case 0x2e: return consOpcode("SRA","HL");
-            case 0x2f: return consOpcode("SRA","a"); 
-            case 0x30: return consOpcode("SWAP","b");  
-            case 0x31: return consOpcode("SWAP","c");  
-            case 0x32: return consOpcode("SWAP","d");  
-            case 0x33: return consOpcode("SWAP","e");  
-            case 0x34: return consOpcode("SWAP","h");
-            case 0x35: return consOpcode("SWAP","l");
-            case 0x36: return consOpcode("SWAP","HL");
-            case 0x37: return consOpcode("SWAP","a"); 
-            case 0x38: return consOpcode("SRL","b");  
-            case 0x39: return consOpcode("SRL","c");  
-            case 0x3a: return consOpcode("SRL","d");  
-            case 0x3b: return consOpcode("SRL","e");  
-            case 0x3c: return consOpcode("SRL","h");  
-            case 0x3d: return consOpcode("SRL","l");
-            case 0x3e: return consOpcode("SRL","HL");
-            case 0x3f: return consOpcode("SRL","a");
-            case 0x40: return consOpcode("BIT","0","b");
-            case 0x41: return consOpcode("BIT","0","c");
-            case 0x42: return consOpcode("BIT","0","d");
-            case 0x43: return consOpcode("BIT","0","e");
-            case 0x44: return consOpcode("BIT","0","h");
-            case 0x45: return consOpcode("BIT","0","l");
-            case 0x46: return consOpcode("BIT","0","HL");
-            case 0x47: return consOpcode("BIT","0","a");
-            case 0x48: return consOpcode("BIT","1","b");  
-            case 0x49: return consOpcode("BIT","1","c");  
-            case 0x4a: return consOpcode("BIT","1","d");  
-            case 0x4b: return consOpcode("BIT","1","e");  
-            case 0x4c: return consOpcode("BIT","1","h");  
-            case 0x4d: return consOpcode("BIT","1","l");  
-            case 0x4e: return consOpcode("BIT","1","HL"); 
-            case 0x4f: return consOpcode("BIT","1","a");  
-            case 0x50: return consOpcode("BIT","2","b");   
-            case 0x51: return consOpcode("BIT","2","c");   
-            case 0x52: return consOpcode("BIT","2","d");   
-            case 0x53: return consOpcode("BIT","2","e");   
-            case 0x54: return consOpcode("BIT","2","h");   
-            case 0x55: return consOpcode("BIT","2","l");   
-            case 0x56: return consOpcode("BIT","2","HL");  
-            case 0x57: return consOpcode("BIT","2","a");   
-            case 0x58: return consOpcode("BIT","3","b");    
-            case 0x59: return consOpcode("BIT","3","c");    
-            case 0x5a: return consOpcode("BIT","3","d");    
-            case 0x5b: return consOpcode("BIT","3","e");    
-            case 0x5c: return consOpcode("BIT","3","h");    
-            case 0x5d: return consOpcode("BIT","3","l");    
-            case 0x5e: return consOpcode("BIT","3","HL");   
-            case 0x5f: return consOpcode("BIT","3","a");    
-            case 0x60: return consOpcode("BIT","4","b");
-            case 0x61: return consOpcode("BIT","4","c");     
-            case 0x62: return consOpcode("BIT","4","d");     
-            case 0x63: return consOpcode("BIT","4","e");     
-            case 0x64: return consOpcode("BIT","4","h");     
-            case 0x65: return consOpcode("BIT","4","l");     
-            case 0x66: return consOpcode("BIT","4","HL");    
-            case 0x67: return consOpcode("BIT","4","a");
-            case 0x68: return consOpcode("BIT","5","b");
-            case 0x69: return consOpcode("BIT","5","c");
-            case 0x6a: return consOpcode("BIT","5","d");
-            case 0x6b: return consOpcode("BIT","5","e");
-            case 0x6c: return consOpcode("BIT","5","h");
-            case 0x6d: return consOpcode("BIT","5","l");
-            case 0x6e: return consOpcode("BIT","5","HL");     
-            case 0x6f: return consOpcode("BIT","5","a");      
-            case 0x70: return consOpcode("BIT","6","b");       
-            case 0x71: return consOpcode("BIT","6","c");       
-            case 0x72: return consOpcode("BIT","6","d");       
-            case 0x73: return consOpcode("BIT","6","e");       
-            case 0x74: return consOpcode("BIT","6","h");       
-            case 0x75: return consOpcode("BIT","6","l");       
-            case 0x76: return consOpcode("BIT","6","HL");      
-            case 0x77: return consOpcode("BIT","6","a");       
-            case 0x78: return consOpcode("BIT","7","b");        
-            case 0x79: return consOpcode("BIT","7","c");        
-            case 0x7a: return consOpcode("BIT","7","d");        
-            case 0x7b: return consOpcode("BIT","7","e");        
-            case 0x7c: return consOpcode("BIT","7","h");        
-            case 0x7d: return consOpcode("BIT","7","l");        
-            case 0x7e: return consOpcode("BIT","7","HL");       
-            case 0x7f: return consOpcode("BIT","7","a");        
-            case 0x80: return consOpcode("RES","0","b");         
-            case 0x81: return consOpcode("RES","0","c");         
-            case 0x82: return consOpcode("RES","0","d");         
-            case 0x83: return consOpcode("RES","0","e");         
-            case 0x84: return consOpcode("RES","0","h");         
-            case 0x85: return consOpcode("RES","0","l");         
-            case 0x86: return consOpcode("RES","0","HL");        
-            case 0x87: return consOpcode("RES","0","a");         
-            case 0x88: return consOpcode("RES","1","b");         
-            case 0x89: return consOpcode("RES","1","c");         
-            case 0x8a: return consOpcode("RES","1","d");         
-            case 0x8b: return consOpcode("RES","1","e");         
-            case 0x8c: return consOpcode("RES","1","h");         
-            case 0x8d: return consOpcode("RES","1","l");         
-            case 0x8e: return consOpcode("RES","1","HL");        
-            case 0x8f: return consOpcode("RES","1","a");         
-            case 0x90: return consOpcode("RES","2","b");         
-            case 0x91: return consOpcode("RES","2","c");         
-            case 0x92: return consOpcode("RES","2","d");         
-            case 0x93: return consOpcode("RES","2","e");         
-            case 0x94: return consOpcode("RES","2","h");         
-            case 0x95: return consOpcode("RES","2","l");         
-            case 0x96: return consOpcode("RES","2","HL");        
-            case 0x97: return consOpcode("RES","2","a");         
-            case 0x98: return consOpcode("RES","3","b");         
-            case 0x99: return consOpcode("RES","3","c");         
-            case 0x9a: return consOpcode("RES","3","d");         
-            case 0x9b: return consOpcode("RES","3","e");         
-            case 0x9c: return consOpcode("RES","3","h");         
-            case 0x9d: return consOpcode("RES","3","l");         
-            case 0x9e: return consOpcode("RES","3","HL");        
-            case 0x9f: return consOpcode("RES","3","a");         
-            case 0xa0: return consOpcode("RES","4","b");         
-            case 0xa1: return consOpcode("RES","4","c");         
-            case 0xa2: return consOpcode("RES","4","d");         
-            case 0xa3: return consOpcode("RES","4","e");         
-            case 0xa4: return consOpcode("RES","4","h");         
-            case 0xa5: return consOpcode("RES","4","l");         
-            case 0xa6: return consOpcode("RES","4","HL");        
-            case 0xa7: return consOpcode("RES","4","a");         
-            case 0xa8: return consOpcode("RES","5","b");         
-            case 0xa9: return consOpcode("RES","5","c");         
-            case 0xaa: return consOpcode("RES","5","d");         
-            case 0xab: return consOpcode("RES","5","e");         
-            case 0xac: return consOpcode("RES","5","h");         
-            case 0xad: return consOpcode("RES","5","l");         
-            case 0xae: return consOpcode("RES","5","HL");        
-            case 0xaf: return consOpcode("RES","5","a");         
-            case 0xb0: return consOpcode("RES","6","b");         
-            case 0xb1: return consOpcode("RES","6","c");         
-            case 0xb2: return consOpcode("RES","6","d");         
-            case 0xb3: return consOpcode("RES","6","e");         
-            case 0xb4: return consOpcode("RES","6","h");         
-            case 0xb5: return consOpcode("RES","6","l");         
-            case 0xb6: return consOpcode("RES","6","HL");        
-            case 0xb7: return consOpcode("RES","6","a");         
-            case 0xb8: return consOpcode("RES","7","b");         
-            case 0xb9: return consOpcode("RES","7","c");         
-            case 0xba: return consOpcode("RES","7","d");         
-            case 0xbb: return consOpcode("RES","7","e");         
-            case 0xbc: return consOpcode("RES","7","h");         
-            case 0xbd: return consOpcode("RES","7","l");         
-            case 0xbe: return consOpcode("RES","7","HL");        
-            case 0xbf: return consOpcode("RES","7","a");         
-            case 0xc0: return consOpcode("SET","0","b");          
-            case 0xc1: return consOpcode("SET","0","c");          
-            case 0xc2: return consOpcode("SET","0","d");          
-            case 0xc3: return consOpcode("SET","0","e");          
-            case 0xc4: return consOpcode("SET","0","h");          
-            case 0xc5: return consOpcode("SET","0","l");          
-            case 0xc6: return consOpcode("SET","0","HL");         
-            case 0xc7: return consOpcode("SET","0","a");          
-            case 0xc8: return consOpcode("SET","1","b");          
-            case 0xc9: return consOpcode("SET","1","c");          
-            case 0xca: return consOpcode("SET","1","d");          
-            case 0xcb: return consOpcode("SET","1","e");          
-            case 0xcc: return consOpcode("SET","1","h");          
-            case 0xcd: return consOpcode("SET","1","l");          
-            case 0xce: return consOpcode("SET","1","HL");         
-            case 0xcf: return consOpcode("SET","1","a");          
-            case 0xd0: return consOpcode("SET","2","b");          
-            case 0xd1: return consOpcode("SET","2","c");          
-            case 0xd2: return consOpcode("SET","2","d");          
-            case 0xd3: return consOpcode("SET","2","e");          
-            case 0xd4: return consOpcode("SET","2","h");          
-            case 0xd5: return consOpcode("SET","2","l");          
-            case 0xd6: return consOpcode("SET","2","HL");         
-            case 0xd7: return consOpcode("SET","2","a");          
-            case 0xd8: return consOpcode("SET","3","b");          
-            case 0xd9: return consOpcode("SET","3","c");          
-            case 0xda: return consOpcode("SET","3","d");          
-            case 0xdb: return consOpcode("SET","3","e");          
-            case 0xdc: return consOpcode("SET","3","h");          
-            case 0xdd: return consOpcode("SET","3","l");          
-            case 0xde: return consOpcode("SET","3","HL");         
-            case 0xdf: return consOpcode("SET","3","a");          
-            case 0xe0: return consOpcode("SET","4","b");          
-            case 0xe1: return consOpcode("SET","4","c");          
-            case 0xe2: return consOpcode("SET","4","d");          
-            case 0xe3: return consOpcode("SET","4","e");          
-            case 0xe4: return consOpcode("SET","4","h");          
-            case 0xe5: return consOpcode("SET","4","l");          
-            case 0xe6: return consOpcode("SET","4","HL");         
-            case 0xe7: return consOpcode("SET","4","a");          
-            case 0xe8: return consOpcode("SET","5","b");          
-            case 0xe9: return consOpcode("SET","5","c");          
-            case 0xea: return consOpcode("SET","5","d");          
-            case 0xeb: return consOpcode("SET","5","e");          
-            case 0xec: return consOpcode("SET","5","h");          
-            case 0xed: return consOpcode("SET","5","l");          
-            case 0xee: return consOpcode("SET","5","HL");         
-            case 0xef: return consOpcode("SET","5","a");          
-            case 0xf0: return consOpcode("SET","6","b");          
-            case 0xf1: return consOpcode("SET","6","c");          
-            case 0xf2: return consOpcode("SET","6","d");          
-            case 0xf3: return consOpcode("SET","6","e");          
-            case 0xf4: return consOpcode("SET","6","h");          
-            case 0xf5: return consOpcode("SET","6","l");          
-            case 0xf6: return consOpcode("SET","6","HL");         
-            case 0xf7: return consOpcode("SET","6","a");          
-            case 0xf8: return consOpcode("SET","7","b");          
-            case 0xf9: return consOpcode("SET","7","c");          
-            case 0xfa: return consOpcode("SET","7","d");          
-            case 0xfb: return consOpcode("SET","7","e");          
-            case 0xfc: return consOpcode("SET","7","h");          
-            case 0xfd: return consOpcode("SET","7","l");          
-            case 0xfe: return consOpcode("SET","7","HL");         
-            case 0xff: return consOpcode("SET","7","a");          
+        switch(this.instruction) {
+            case 0x00:
+                return consOpcode("RLC", "b");
+            case 0x01:
+                return consOpcode("RLC", "c");
+            case 0x02:
+                return consOpcode("RLC", "d");
+            case 0x03:
+                return consOpcode("RLC", "e");
+            case 0x04:
+                return consOpcode("RLC", "h");
+            case 0x05:
+                return consOpcode("RLC", "l");
+            case 0x06:
+                return consOpcode("RLC", "HL");
+            case 0x07:
+                return consOpcode("RLC", "a");
+            case 0x08:
+                return consOpcode("RRC", "b");
+            case 0x09:
+                return consOpcode("RRC", "c");
+            case 0x0a:
+                return consOpcode("RRC", "d");
+            case 0x0b:
+                return consOpcode("RRC", "e");
+            case 0x0c:
+                return consOpcode("RRC", "h");
+            case 0x0d:
+                return consOpcode("RRC", "l");
+            case 0x0e:
+                return consOpcode("RRC", "HL");
+            case 0x0f:
+                return consOpcode("RRC", "a");
+            case 0x10:
+                return consOpcode("RL", "b");
+            case 0x11:
+                return consOpcode("RL", "c");
+            case 0x12:
+                return consOpcode("RL", "d");
+            case 0x13:
+                return consOpcode("RL", "e");
+            case 0x14:
+                return consOpcode("RL", "h");
+            case 0x15:
+                return consOpcode("RL", "l");
+            case 0x16:
+                return consOpcode("RL", "HL");
+            case 0x17:
+                return consOpcode("RL", "a");
+            case 0x18:
+                return consOpcode("RR", "b");
+            case 0x19:
+                return consOpcode("RR", "c");
+            case 0x1a:
+                return consOpcode("RR", "d");
+            case 0x1b:
+                return consOpcode("RR", "e");
+            case 0x1c:
+                return consOpcode("RR", "h");
+            case 0x1d:
+                return consOpcode("RR", "l");
+            case 0x1e:
+                return consOpcode("RR", "HL");
+            case 0x1f:
+                return consOpcode("RR", "a");
+            case 0x20:
+                return consOpcode("SLA", "b");
+            case 0x21:
+                return consOpcode("SLA", "c");
+            case 0x22:
+                return consOpcode("SLA", "d");
+            case 0x23:
+                return consOpcode("SLA", "e");
+            case 0x24:
+                return consOpcode("SLA", "h");
+            case 0x25:
+                return consOpcode("SLA", "l");
+            case 0x26:
+                return consOpcode("SLA", "HL");
+            case 0x27:
+                return consOpcode("SLA", "a");
+            case 0x28:
+                return consOpcode("SRA", "b");
+            case 0x29:
+                return consOpcode("SRA", "c");
+            case 0x2a:
+                return consOpcode("SRA", "d");
+            case 0x2b:
+                return consOpcode("SRA", "e");
+            case 0x2c:
+                return consOpcode("SRA", "h");
+            case 0x2d:
+                return consOpcode("SRA", "l");
+            case 0x2e:
+                return consOpcode("SRA", "HL");
+            case 0x2f:
+                return consOpcode("SRA", "a");
+            case 0x30:
+                return consOpcode("SWAP", "b");
+            case 0x31:
+                return consOpcode("SWAP", "c");
+            case 0x32:
+                return consOpcode("SWAP", "d");
+            case 0x33:
+                return consOpcode("SWAP", "e");
+            case 0x34:
+                return consOpcode("SWAP", "h");
+            case 0x35:
+                return consOpcode("SWAP", "l");
+            case 0x36:
+                return consOpcode("SWAP", "HL");
+            case 0x37:
+                return consOpcode("SWAP", "a");
+            case 0x38:
+                return consOpcode("SRL", "b");
+            case 0x39:
+                return consOpcode("SRL", "c");
+            case 0x3a:
+                return consOpcode("SRL", "d");
+            case 0x3b:
+                return consOpcode("SRL", "e");
+            case 0x3c:
+                return consOpcode("SRL", "h");
+            case 0x3d:
+                return consOpcode("SRL", "l");
+            case 0x3e:
+                return consOpcode("SRL", "HL");
+            case 0x3f:
+                return consOpcode("SRL", "a");
+            case 0x40:
+                return consOpcode("BIT", "0", "b");
+            case 0x41:
+                return consOpcode("BIT", "0", "c");
+            case 0x42:
+                return consOpcode("BIT", "0", "d");
+            case 0x43:
+                return consOpcode("BIT", "0", "e");
+            case 0x44:
+                return consOpcode("BIT", "0", "h");
+            case 0x45:
+                return consOpcode("BIT", "0", "l");
+            case 0x46:
+                return consOpcode("BIT", "0", "HL");
+            case 0x47:
+                return consOpcode("BIT", "0", "a");
+            case 0x48:
+                return consOpcode("BIT", "1", "b");
+            case 0x49:
+                return consOpcode("BIT", "1", "c");
+            case 0x4a:
+                return consOpcode("BIT", "1", "d");
+            case 0x4b:
+                return consOpcode("BIT", "1", "e");
+            case 0x4c:
+                return consOpcode("BIT", "1", "h");
+            case 0x4d:
+                return consOpcode("BIT", "1", "l");
+            case 0x4e:
+                return consOpcode("BIT", "1", "HL");
+            case 0x4f:
+                return consOpcode("BIT", "1", "a");
+            case 0x50:
+                return consOpcode("BIT", "2", "b");
+            case 0x51:
+                return consOpcode("BIT", "2", "c");
+            case 0x52:
+                return consOpcode("BIT", "2", "d");
+            case 0x53:
+                return consOpcode("BIT", "2", "e");
+            case 0x54:
+                return consOpcode("BIT", "2", "h");
+            case 0x55:
+                return consOpcode("BIT", "2", "l");
+            case 0x56:
+                return consOpcode("BIT", "2", "HL");
+            case 0x57:
+                return consOpcode("BIT", "2", "a");
+            case 0x58:
+                return consOpcode("BIT", "3", "b");
+            case 0x59:
+                return consOpcode("BIT", "3", "c");
+            case 0x5a:
+                return consOpcode("BIT", "3", "d");
+            case 0x5b:
+                return consOpcode("BIT", "3", "e");
+            case 0x5c:
+                return consOpcode("BIT", "3", "h");
+            case 0x5d:
+                return consOpcode("BIT", "3", "l");
+            case 0x5e:
+                return consOpcode("BIT", "3", "HL");
+            case 0x5f:
+                return consOpcode("BIT", "3", "a");
+            case 0x60:
+                return consOpcode("BIT", "4", "b");
+            case 0x61:
+                return consOpcode("BIT", "4", "c");
+            case 0x62:
+                return consOpcode("BIT", "4", "d");
+            case 0x63:
+                return consOpcode("BIT", "4", "e");
+            case 0x64:
+                return consOpcode("BIT", "4", "h");
+            case 0x65:
+                return consOpcode("BIT", "4", "l");
+            case 0x66:
+                return consOpcode("BIT", "4", "HL");
+            case 0x67:
+                return consOpcode("BIT", "4", "a");
+            case 0x68:
+                return consOpcode("BIT", "5", "b");
+            case 0x69:
+                return consOpcode("BIT", "5", "c");
+            case 0x6a:
+                return consOpcode("BIT", "5", "d");
+            case 0x6b:
+                return consOpcode("BIT", "5", "e");
+            case 0x6c:
+                return consOpcode("BIT", "5", "h");
+            case 0x6d:
+                return consOpcode("BIT", "5", "l");
+            case 0x6e:
+                return consOpcode("BIT", "5", "HL");
+            case 0x6f:
+                return consOpcode("BIT", "5", "a");
+            case 0x70:
+                return consOpcode("BIT", "6", "b");
+            case 0x71:
+                return consOpcode("BIT", "6", "c");
+            case 0x72:
+                return consOpcode("BIT", "6", "d");
+            case 0x73:
+                return consOpcode("BIT", "6", "e");
+            case 0x74:
+                return consOpcode("BIT", "6", "h");
+            case 0x75:
+                return consOpcode("BIT", "6", "l");
+            case 0x76:
+                return consOpcode("BIT", "6", "HL");
+            case 0x77:
+                return consOpcode("BIT", "6", "a");
+            case 0x78:
+                return consOpcode("BIT", "7", "b");
+            case 0x79:
+                return consOpcode("BIT", "7", "c");
+            case 0x7a:
+                return consOpcode("BIT", "7", "d");
+            case 0x7b:
+                return consOpcode("BIT", "7", "e");
+            case 0x7c:
+                return consOpcode("BIT", "7", "h");
+            case 0x7d:
+                return consOpcode("BIT", "7", "l");
+            case 0x7e:
+                return consOpcode("BIT", "7", "HL");
+            case 0x7f:
+                return consOpcode("BIT", "7", "a");
+            case 0x80:
+                return consOpcode("RES", "0", "b");
+            case 0x81:
+                return consOpcode("RES", "0", "c");
+            case 0x82:
+                return consOpcode("RES", "0", "d");
+            case 0x83:
+                return consOpcode("RES", "0", "e");
+            case 0x84:
+                return consOpcode("RES", "0", "h");
+            case 0x85:
+                return consOpcode("RES", "0", "l");
+            case 0x86:
+                return consOpcode("RES", "0", "HL");
+            case 0x87:
+                return consOpcode("RES", "0", "a");
+            case 0x88:
+                return consOpcode("RES", "1", "b");
+            case 0x89:
+                return consOpcode("RES", "1", "c");
+            case 0x8a:
+                return consOpcode("RES", "1", "d");
+            case 0x8b:
+                return consOpcode("RES", "1", "e");
+            case 0x8c:
+                return consOpcode("RES", "1", "h");
+            case 0x8d:
+                return consOpcode("RES", "1", "l");
+            case 0x8e:
+                return consOpcode("RES", "1", "HL");
+            case 0x8f:
+                return consOpcode("RES", "1", "a");
+            case 0x90:
+                return consOpcode("RES", "2", "b");
+            case 0x91:
+                return consOpcode("RES", "2", "c");
+            case 0x92:
+                return consOpcode("RES", "2", "d");
+            case 0x93:
+                return consOpcode("RES", "2", "e");
+            case 0x94:
+                return consOpcode("RES", "2", "h");
+            case 0x95:
+                return consOpcode("RES", "2", "l");
+            case 0x96:
+                return consOpcode("RES", "2", "HL");
+            case 0x97:
+                return consOpcode("RES", "2", "a");
+            case 0x98:
+                return consOpcode("RES", "3", "b");
+            case 0x99:
+                return consOpcode("RES", "3", "c");
+            case 0x9a:
+                return consOpcode("RES", "3", "d");
+            case 0x9b:
+                return consOpcode("RES", "3", "e");
+            case 0x9c:
+                return consOpcode("RES", "3", "h");
+            case 0x9d:
+                return consOpcode("RES", "3", "l");
+            case 0x9e:
+                return consOpcode("RES", "3", "HL");
+            case 0x9f:
+                return consOpcode("RES", "3", "a");
+            case 0xa0:
+                return consOpcode("RES", "4", "b");
+            case 0xa1:
+                return consOpcode("RES", "4", "c");
+            case 0xa2:
+                return consOpcode("RES", "4", "d");
+            case 0xa3:
+                return consOpcode("RES", "4", "e");
+            case 0xa4:
+                return consOpcode("RES", "4", "h");
+            case 0xa5:
+                return consOpcode("RES", "4", "l");
+            case 0xa6:
+                return consOpcode("RES", "4", "HL");
+            case 0xa7:
+                return consOpcode("RES", "4", "a");
+            case 0xa8:
+                return consOpcode("RES", "5", "b");
+            case 0xa9:
+                return consOpcode("RES", "5", "c");
+            case 0xaa:
+                return consOpcode("RES", "5", "d");
+            case 0xab:
+                return consOpcode("RES", "5", "e");
+            case 0xac:
+                return consOpcode("RES", "5", "h");
+            case 0xad:
+                return consOpcode("RES", "5", "l");
+            case 0xae:
+                return consOpcode("RES", "5", "HL");
+            case 0xaf:
+                return consOpcode("RES", "5", "a");
+            case 0xb0:
+                return consOpcode("RES", "6", "b");
+            case 0xb1:
+                return consOpcode("RES", "6", "c");
+            case 0xb2:
+                return consOpcode("RES", "6", "d");
+            case 0xb3:
+                return consOpcode("RES", "6", "e");
+            case 0xb4:
+                return consOpcode("RES", "6", "h");
+            case 0xb5:
+                return consOpcode("RES", "6", "l");
+            case 0xb6:
+                return consOpcode("RES", "6", "HL");
+            case 0xb7:
+                return consOpcode("RES", "6", "a");
+            case 0xb8:
+                return consOpcode("RES", "7", "b");
+            case 0xb9:
+                return consOpcode("RES", "7", "c");
+            case 0xba:
+                return consOpcode("RES", "7", "d");
+            case 0xbb:
+                return consOpcode("RES", "7", "e");
+            case 0xbc:
+                return consOpcode("RES", "7", "h");
+            case 0xbd:
+                return consOpcode("RES", "7", "l");
+            case 0xbe:
+                return consOpcode("RES", "7", "HL");
+            case 0xbf:
+                return consOpcode("RES", "7", "a");
+            case 0xc0:
+                return consOpcode("SET", "0", "b");
+            case 0xc1:
+                return consOpcode("SET", "0", "c");
+            case 0xc2:
+                return consOpcode("SET", "0", "d");
+            case 0xc3:
+                return consOpcode("SET", "0", "e");
+            case 0xc4:
+                return consOpcode("SET", "0", "h");
+            case 0xc5:
+                return consOpcode("SET", "0", "l");
+            case 0xc6:
+                return consOpcode("SET", "0", "HL");
+            case 0xc7:
+                return consOpcode("SET", "0", "a");
+            case 0xc8:
+                return consOpcode("SET", "1", "b");
+            case 0xc9:
+                return consOpcode("SET", "1", "c");
+            case 0xca:
+                return consOpcode("SET", "1", "d");
+            case 0xcb:
+                return consOpcode("SET", "1", "e");
+            case 0xcc:
+                return consOpcode("SET", "1", "h");
+            case 0xcd:
+                return consOpcode("SET", "1", "l");
+            case 0xce:
+                return consOpcode("SET", "1", "HL");
+            case 0xcf:
+                return consOpcode("SET", "1", "a");
+            case 0xd0:
+                return consOpcode("SET", "2", "b");
+            case 0xd1:
+                return consOpcode("SET", "2", "c");
+            case 0xd2:
+                return consOpcode("SET", "2", "d");
+            case 0xd3:
+                return consOpcode("SET", "2", "e");
+            case 0xd4:
+                return consOpcode("SET", "2", "h");
+            case 0xd5:
+                return consOpcode("SET", "2", "l");
+            case 0xd6:
+                return consOpcode("SET", "2", "HL");
+            case 0xd7:
+                return consOpcode("SET", "2", "a");
+            case 0xd8:
+                return consOpcode("SET", "3", "b");
+            case 0xd9:
+                return consOpcode("SET", "3", "c");
+            case 0xda:
+                return consOpcode("SET", "3", "d");
+            case 0xdb:
+                return consOpcode("SET", "3", "e");
+            case 0xdc:
+                return consOpcode("SET", "3", "h");
+            case 0xdd:
+                return consOpcode("SET", "3", "l");
+            case 0xde:
+                return consOpcode("SET", "3", "HL");
+            case 0xdf:
+                return consOpcode("SET", "3", "a");
+            case 0xe0:
+                return consOpcode("SET", "4", "b");
+            case 0xe1:
+                return consOpcode("SET", "4", "c");
+            case 0xe2:
+                return consOpcode("SET", "4", "d");
+            case 0xe3:
+                return consOpcode("SET", "4", "e");
+            case 0xe4:
+                return consOpcode("SET", "4", "h");
+            case 0xe5:
+                return consOpcode("SET", "4", "l");
+            case 0xe6:
+                return consOpcode("SET", "4", "HL");
+            case 0xe7:
+                return consOpcode("SET", "4", "a");
+            case 0xe8:
+                return consOpcode("SET", "5", "b");
+            case 0xe9:
+                return consOpcode("SET", "5", "c");
+            case 0xea:
+                return consOpcode("SET", "5", "d");
+            case 0xeb:
+                return consOpcode("SET", "5", "e");
+            case 0xec:
+                return consOpcode("SET", "5", "h");
+            case 0xed:
+                return consOpcode("SET", "5", "l");
+            case 0xee:
+                return consOpcode("SET", "5", "HL");
+            case 0xef:
+                return consOpcode("SET", "5", "a");
+            case 0xf0:
+                return consOpcode("SET", "6", "b");
+            case 0xf1:
+                return consOpcode("SET", "6", "c");
+            case 0xf2:
+                return consOpcode("SET", "6", "d");
+            case 0xf3:
+                return consOpcode("SET", "6", "e");
+            case 0xf4:
+                return consOpcode("SET", "6", "h");
+            case 0xf5:
+                return consOpcode("SET", "6", "l");
+            case 0xf6:
+                return consOpcode("SET", "6", "HL");
+            case 0xf7:
+                return consOpcode("SET", "6", "a");
+            case 0xf8:
+                return consOpcode("SET", "7", "b");
+            case 0xf9:
+                return consOpcode("SET", "7", "c");
+            case 0xfa:
+                return consOpcode("SET", "7", "d");
+            case 0xfb:
+                return consOpcode("SET", "7", "e");
+            case 0xfc:
+                return consOpcode("SET", "7", "h");
+            case 0xfd:
+                return consOpcode("SET", "7", "l");
+            case 0xfe:
+                return consOpcode("SET", "7", "HL");
+            case 0xff:
+                return consOpcode("SET", "7", "a");
+            default: return consOpcode("NOP");
+        }
     }
 
 }

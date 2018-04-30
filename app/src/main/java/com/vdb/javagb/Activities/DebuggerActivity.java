@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.vdb.javagb.Activities.Utils.ExecRecyclerAdapter;
+import com.vdb.javagb.Activities.gb.Decompiler;
 import com.vdb.javagb.Activities.gb.FullGB;
 import com.vdb.javagb.Activities.gb.memory.TestRom;
 import com.vdb.javagb.R;
@@ -24,6 +25,7 @@ public class DebuggerActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private List<OpCode> mOpCodes;
     private FullGB mFullGb;
+    private Decompiler mDecompiler;
     private ManageGBDB mGbdb;
     private ExecRecyclerAdapter.ViewHolder step;
     private int currentAddress;
@@ -38,7 +40,8 @@ public class DebuggerActivity extends AppCompatActivity {
         String pathRom = getIntent().getStringExtra("pathRom");
         TestRom testRom = new TestRom();
         mGbdb = new ManageGBDB(this);
-        mFullGb = new FullGB(pathRom, getApplicationContext());
+        mFullGb = new FullGB(pathRom);
+        mDecompiler = mFullGb.getDecompiler();
         //mFullGb = new FullGB(testRom.testRom);
         mOpCodes = new ArrayList<OpCode>();
 
@@ -119,15 +122,14 @@ public class DebuggerActivity extends AppCompatActivity {
 
     protected void initList(){
 
-        mGbdb.open();
-        int[] ram = mFullGb.dumpRam();
-        List<OpCode> opCodes = mGbdb.getDataOpCode().getAll();
-        mGbdb.close();
+
+        ArrayList<String> ramor = mDecompiler.decompileRom();
+        List<OpCode> opCodes;
         boolean cb = false;
 
         int k = 0;
         int p = 0;
-        for (int i : ram){
+        for (String s : ramor){
             //si i vaut la valeur décimale de cb
             if (i == 203) { cb = true; continue; }
             String code;

@@ -1,10 +1,7 @@
 package Entity;
 
 public class OpCode {
-    private String hexa_id;
-    private Instruction instruction;
-    private Operator operatorSrc;
-    private Operator operatorBut;
+    private String code;
     private Boolean selected = false;
     private Boolean checking = false;
     private int address = -1;
@@ -12,47 +9,16 @@ public class OpCode {
 
     public OpCode(){}
 
-    public OpCode(String hexa_id) {
-        this.hexa_id = hexa_id;
+    public OpCode(String str) {
+        this.code = str;
     }
 
-    public OpCode(OpCode opCode) {
-        this.hexa_id = opCode.getHexa_id();
-        this.instruction = (opCode.getInstruction()!=null)?new Instruction(opCode.getInstruction()):null;
-        this.operatorSrc = (opCode.getOperatorSrc()!=null)?new Operator(opCode.getOperatorSrc()):null;
-        this.operatorBut = (opCode.getOperatorBut()!=null)?new Operator(opCode.getOperatorBut()):null;
+    public String getCode() {
+        return code;
     }
 
-    public String getHexa_id() {
-        return hexa_id;
-    }
-
-    public void setHexa_id(String hexa_id) {
-        this.hexa_id = hexa_id;
-    }
-
-    public Instruction getInstruction() {
-        return instruction;
-    }
-
-    public void setInstruction(Instruction instruction) {
-        this.instruction = instruction;
-    }
-
-    public Operator getOperatorSrc() {
-        return operatorSrc;
-    }
-
-    public void setOperatorSrc(Operator operatorSrc) {
-        this.operatorSrc = operatorSrc;
-    }
-
-    public Operator getOperatorBut() {
-        return operatorBut;
-    }
-
-    public void setOperatorBut(Operator operatorBut) {
-        this.operatorBut = operatorBut;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public void toggle(){
@@ -89,12 +55,5 @@ public class OpCode {
 
     public void setAddress(int address) {
         this.address = address;
-    }
-
-    public String getRow(){
-        return "ID : "+hexa_id+"\n"
-                +"INSTRUCTION : "+((instruction!=null)?instruction.getRow():"null")+"\n"
-                +"OPERATEUR SOURCE : "+((operatorSrc!=null)?operatorSrc.getRow():"null")+"\n"
-                +"OPERATEUR BUT : "+((operatorBut!=null)?operatorBut.getRow():"null");
     }
 }

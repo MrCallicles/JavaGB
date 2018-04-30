@@ -14,12 +14,14 @@ import java.io.IOException;
 public class FullGB{
     protected boolean[] breakpoints = new boolean[0xFFFF];
     protected Ram ram;
+    protected Decompiler decompiler;
     public Registers registers;
     public ExecCpu cpu;
     public InfoRom infos;
 
     public FullGB(int[] testRom){
         ram = new Ram();
+        decompiler = new Decompiler(ram);
         registers = new Registers();
         ram.loadRomArray(testRom);
 
@@ -29,10 +31,11 @@ public class FullGB{
         this.resetBreakpoints();
     }
 
-    public FullGB(String pathRom, Context context) {
+    public FullGB(String pathRom) {
         ram = new Ram();
+        decompiler = new Decompiler(ram);
         registers = new Registers();
-        ram.loadRomFile(pathRom, context);
+        ram.loadRomFile(pathRom);
         cpu = new ExecCpu(ram, registers);
         infos = new InfoRom(ram);
 
@@ -57,7 +60,9 @@ public class FullGB{
         }
     }
 
-
+    public Decompiler getDecompiler(){
+        return decompiler;
+    }
 
     public int run(){
         //return true when

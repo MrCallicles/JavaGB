@@ -74,7 +74,7 @@ public class Ram{
         }
     }
 
-    public void loadRomFile(String pathRom, Context context) {
+    public void loadRomFile(String pathRom) {
 
         //charge une rom depuis un fichier
         int n = 0x7FFF; //taille rom sur memory map ?? = 32767
