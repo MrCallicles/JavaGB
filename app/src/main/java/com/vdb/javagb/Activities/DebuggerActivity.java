@@ -120,6 +120,7 @@ public class DebuggerActivity extends AppCompatActivity {
         });
     }
 
+
     protected void initList(){
 
 
@@ -159,6 +160,7 @@ public class DebuggerActivity extends AppCompatActivity {
             }
 
         }
+
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewDebug);
         mRecyclerView.setHasFixedSize(true);

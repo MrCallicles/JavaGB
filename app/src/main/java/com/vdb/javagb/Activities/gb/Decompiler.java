@@ -30,8 +30,8 @@ public class Decompiler{
         return String.format("%2x", hexa);
     }
 
-    public ArrayList<String> decompileRom(){
-        ArrayList<String> tmp = new ArrayList();
+    public ArrayList<String[]> decompileRom(){
+        ArrayList<String[]> tmp = new ArrayList();
         this.loadInstruction();
         for(int i = 0; i < 0x7FFF; i++){
             tmp.add(decompileInstruction());
@@ -45,13 +45,16 @@ public class Decompiler{
     //de paramètre, on peut toujours modifier la construction
     //plus tard
     private String[] consOpcode(String mnemo, String opA, String opB){
-        return String[] {mnemo, opA, opB};
+        String[] tmp = {mnemo, opA, opB};
+        return tmp;
     }
-    private String consOpcode(String mnemo, String op){
-        return String[] {mnemo, op, ""};
+    private String[] consOpcode(String mnemo, String op){
+        String[] tmp = {mnemo, op, ""};
+        return tmp;
     }
-    private String consOpcode(String mnemo){
-        return String[] {mnemo, "", ""};
+    private String[] consOpcode(String mnemo){
+        String[] tmp = {mnemo, "", ""};
+        return tmp;
     }
 
     private String opOctet(){
