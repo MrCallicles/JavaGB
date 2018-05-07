@@ -71,6 +71,7 @@ public class DebuggerActivity extends AppCompatActivity {
         });
     }
 
+
     protected void initList(){
 
         mOpCodes = new ArrayList<>();
@@ -85,6 +86,7 @@ public class DebuggerActivity extends AppCompatActivity {
             mOpCodes.add(opCode);
             p++;
         }
+
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewDebug);
         mRecyclerView.setHasFixedSize(true);
