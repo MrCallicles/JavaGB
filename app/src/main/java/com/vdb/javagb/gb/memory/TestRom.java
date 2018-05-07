@@ -1,4 +1,4 @@
-package com.vdb.javagb.Activities.gb.memory;
+package com.vdb.javagb.gb.memory;
 
 public class TestRom{
     public static int[] testRom = new int[] {

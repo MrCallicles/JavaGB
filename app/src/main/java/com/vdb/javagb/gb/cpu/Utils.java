@@ -4,7 +4,7 @@
 // Contient des fonctions utiles pour
 // les calculs sur les registres
 //
-package com.vdb.javagb.Activities.gb.cpu;
+package com.vdb.javagb.gb.cpu;
 
 public class Utils{
     public static int setBit(int value,boolean input, int position){

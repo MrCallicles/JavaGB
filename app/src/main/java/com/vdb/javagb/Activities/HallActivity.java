@@ -2,7 +2,6 @@ package com.vdb.javagb.Activities;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.SearchManager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 
+import android.os.Build;
 import android.os.Environment;
 import android.os.Bundle;
 
@@ -20,33 +20,32 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.SearchView;
+import android.text.InputType;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.support.v7.widget.Toolbar;
 
 import android.util.Log;
 
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vdb.javagb.R;
 
 import java.io.File;
-import java.net.URI;
-
-import Entity.Instruction;
-import Entity.OpCode;
-import Entity.Operator;
 
 public class HallActivity extends AppCompatActivity {
     private String pathRom;
     private String filename;
-    private ManageGBDB gbdb;
     private TextView txtViewHall;
     private static final int READ_REQUEST_CODE = 42;
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 21;
@@ -57,12 +56,11 @@ public class HallActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hall);
 
-        Toolbar appToolbar = (Toolbar) findViewById(R.id.app_toolbar);
+        Toolbar appToolbar = findViewById(R.id.app_toolbar);
         setSupportActionBar(appToolbar);
         getSupportActionBar().setTitle("JavaGB");
 
-        gbdb = new ManageGBDB(this);
-        txtViewHall = (TextView)findViewById(R.id.textViewScreen);
+        txtViewHall = findViewById(R.id.textViewScreen);
 
         //showData();
 
@@ -149,36 +147,22 @@ public class HallActivity extends AppCompatActivity {
         }
     }
 
-        @Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.tool_menu, menu);
-
-        // Associate searchable configuration with the SearchView
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
-
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.tool_menu, menu);
         return true;
     }
 
-    private void showData(){
-        gbdb.open();
-        for (OpCode opCode : gbdb.getDataOpCode().getAll()){
-            Log.i("OpCode", opCode.getRow());
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_map) {
+            popupWindow();
         }
 
-        for (Instruction instruction : gbdb.getDataInstruction().getAll()){
-            Log.i("Instruction", instruction.getRow());
-        }
-
-        for (Operator operator : gbdb.getDataOperator().getAll()){
-            Log.i("Operator", operator.getRow());
-        }
-        gbdb.close();
+        return super.onOptionsItemSelected(item);
     }
 
     public void performFileSearch() {
@@ -196,7 +180,6 @@ public class HallActivity extends AppCompatActivity {
     }
 
     private void checkPermission(){
-        // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -237,5 +220,39 @@ public class HallActivity extends AppCompatActivity {
                     .show();
             performFileSearch();
         }
+    }
+
+    private void popupWindow(){
+        final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.popup_maps, null);
+        final PopupWindow popupWindow = new PopupWindow(linearLayout, LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT, true);
+
+        if(Build.VERSION.SDK_INT>=21){
+            popupWindow.setAnimationStyle(R.style.AnimationPopup);
+            popupWindow.setElevation(5.0f);
+        }
+
+        final EditText editTextLatitude = linearLayout.findViewById(R.id.edtLatitude);
+        final EditText editTextLongitude = linearLayout.findViewById(R.id.edtLongitude);
+
+        ImageButton buttonLocate = (ImageButton) linearLayout.findViewById(R.id.imageButtonLocate);
+        buttonLocate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HallActivity.this, MapsActivity.class);
+                intent.putExtra("latitude", Integer.parseInt(editTextLatitude.getText().toString()));
+                intent.putExtra("longitude", Integer.parseInt(editTextLongitude.getText().toString()));
+                popupWindow.dismiss();
+                startActivity(intent);
+            }
+        });
+
+        popupWindow.showAtLocation(findViewById(R.id.app_toolbar), Gravity.CENTER,0,0);
+    }
+
+    protected int dp2px(int dp, Context context){
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
     }
 }

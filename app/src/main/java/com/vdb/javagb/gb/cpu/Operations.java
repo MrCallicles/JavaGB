@@ -8,9 +8,9 @@
 // LD_AFnn()
 // )
 //
-package com.vdb.javagb.Activities.gb.cpu;
+package com.vdb.javagb.gb.cpu;
 
-import com.vdb.javagb.Activities.gb.memory.*;
+import com.vdb.javagb.gb.memory.*;
 
 public class Operations{
     private Registers _r;

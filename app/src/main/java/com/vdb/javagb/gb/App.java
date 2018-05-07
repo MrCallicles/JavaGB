@@ -1,8 +1,4 @@
-package com.vdb.javagb.Activities.gb;
-
-import com.vdb.javagb.Activities.gb.memory.TestRom;
-
-import java.util.Scanner;
+package com.vdb.javagb.gb;
 
 
 public class App{

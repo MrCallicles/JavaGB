@@ -8,16 +8,15 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.vdb.javagb.Activities.Utils.ExecRecyclerAdapter;
-import com.vdb.javagb.Activities.gb.Decompiler;
-import com.vdb.javagb.Activities.gb.FullGB;
-import com.vdb.javagb.Activities.gb.memory.TestRom;
+import com.vdb.javagb.gb.Decompiler;
+import com.vdb.javagb.gb.FullGB;
+import com.vdb.javagb.gb.memory.TestRom;
 import com.vdb.javagb.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import Entity.OpCode;
-import dalvik.bytecode.Opcodes;
 
 public class DebuggerActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
@@ -26,7 +25,6 @@ public class DebuggerActivity extends AppCompatActivity {
     private List<OpCode> mOpCodes;
     private FullGB mFullGb;
     private Decompiler mDecompiler;
-    private ManageGBDB mGbdb;
     private ExecRecyclerAdapter.ViewHolder step;
     private int currentAddress;
     private int currentPosition;
@@ -39,12 +37,9 @@ public class DebuggerActivity extends AppCompatActivity {
 
         String pathRom = getIntent().getStringExtra("pathRom");
         TestRom testRom = new TestRom();
-        mGbdb = new ManageGBDB(this);
         mFullGb = new FullGB(pathRom);
-        mDecompiler = mFullGb.getDecompiler();
         //mFullGb = new FullGB(testRom.testRom);
-        mOpCodes = new ArrayList<OpCode>();
-
+        mDecompiler = mFullGb.getDecompiler();
         initList();
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -55,28 +50,12 @@ public class DebuggerActivity extends AppCompatActivity {
             }
         });
 
-        /*final RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(this) {
-            @Override protected int getVerticalSnapPreference() {
-                return LinearSmoothScroller.SNAP_TO_START;
-            }
-        };*/
-
         ImageView buttonRun = (ImageView)findViewById(R.id.buttonRun);
         buttonRun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 currentAddress = mFullGb.run();
-
-                int last = ((LinearLayoutManager) mLayoutManager).findLastVisibleItemPosition();
-                int first = ((LinearLayoutManager) mLayoutManager).findFirstVisibleItemPosition();
-
-                int inc = 0;
-                if(currentAddress > (last-first)/2)
-                    inc = currentAddress-((last-first)/2);
-                else
-                    setLineChecking();
-
-                mLayoutManager.scrollToPosition(inc);
+                setPositionView();
             }
         });
 
@@ -87,77 +66,24 @@ public class DebuggerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 currentAddress = mFullGb.step();
-                /*if(mFullGb.cpu.getInstruction() == 203){
-                    return;
-                }*/
-
-                int last = ((LinearLayoutManager) mLayoutManager).findLastVisibleItemPosition();
-                int first = ((LinearLayoutManager) mLayoutManager).findFirstVisibleItemPosition();
-
-                int pos = 0;
-                boolean curs = false;
-                while(true){
-                    for (OpCode opCode : mOpCodes){
-                        if (opCode.getAddress() == currentAddress){
-                            pos = opCode.getPosition();
-                            curs=true;
-                            break;
-                        }
-                    }
-                    if(curs) break;
-                    currentAddress = mFullGb.step();
-                }
-
-                currentPosition = pos;
-                int inc = 0;
-                if(pos > (last-first)/2)
-                    inc = pos-((last-first)/2);
-                else
-                    setLineChecking();
-
-                ((LinearLayoutManager) mLayoutManager).scrollToPositionWithOffset(inc, 0);
+                setPositionView();
             }
         });
     }
 
     protected void initList(){
 
-
-        ArrayList<String> ramor = mDecompiler.decompileRom();
-        List<OpCode> opCodes;
+        mOpCodes = new ArrayList<>();
+        ArrayList<String[]> ramor = mDecompiler.decompileRom();
         boolean cb = false;
 
-        int k = 0;
         int p = 0;
-        for (String s : ramor){
-            //si i vaut la valeur décimale de cb
-            if (i == 203) { cb = true; continue; }
-            String code;
-            if(cb){
-                code = "cb_"+((i < 16)?"0"+Integer.toHexString(i):Integer.toHexString(i));
-            } else {
-                code = (i < 16)?"0"+Integer.toHexString(i):Integer.toHexString(i);
-            }
-            OpCode opCode = null;
-            String hex = "0x"+code;
-            for (OpCode opcode : opCodes){
-                if(opcode.getHexa_id().equals(hex)){
-                    opCode = new OpCode(opcode);
-                    opCode.setAddress(k);
-                    opCode.setPosition(p);
-                    break;
-                }
-            }
-            if(cb){
-                cb=false;
-                k++;
-            }
-            k++;
-            if(opCode != null && opCode.getInstruction() != null){
-                mOpCodes.add(opCode);
-                p++;
-            }
-
+        for (String[] ts : ramor){
+            OpCode opCode = new OpCode(ts);
+            opCode.setAddress(Integer.parseInt(ts[0]));
+            opCode.setPosition(p);
+            mOpCodes.add(opCode);
+            p++;
         }
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewDebug);
@@ -169,8 +95,37 @@ public class DebuggerActivity extends AppCompatActivity {
         ((ExecRecyclerAdapter) mAdapter).setFullGB(mFullGb);
     }
 
+    private void setPositionView(){
+        int last = ((LinearLayoutManager) mLayoutManager).findLastVisibleItemPosition();
+        int first = ((LinearLayoutManager) mLayoutManager).findFirstVisibleItemPosition();
+
+        int pos = 0;
+        boolean curs = false;
+        while(true){
+            for (OpCode opCode : mOpCodes){
+                if (opCode.getAddress() == currentAddress){
+                    pos = opCode.getPosition();
+                    curs=true;
+                    break;
+                }
+            }
+            if(curs) break;
+            currentAddress = mFullGb.step();
+        }
+
+        currentPosition = pos;
+        int inc = 0;
+        if(pos > (last-first)/2)
+            inc = pos-((last-first)/2);
+        else
+            setLineChecking();
+
+        ((LinearLayoutManager) mLayoutManager).scrollToPositionWithOffset(inc, 0);
+    }
+
     private void setLineChecking(){
         if (step != null) {
+            step.mLinearLayout.setOnClickListener(null);
             step.mLinearLayout.setBackgroundColor(getColor(R.color.Transparent));
             step.mViewPosition.setTextColor(getColor(R.color.GBGrey));
             step.mViewAdresse.setTextColor(getColor(R.color.GBText));
@@ -181,6 +136,12 @@ public class DebuggerActivity extends AppCompatActivity {
         }
         step = (ExecRecyclerAdapter.ViewHolder) mRecyclerView.findViewHolderForAdapterPosition(currentPosition);
         if (step != null){
+            step.mLinearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mFullGb.showRegisters();
+                }
+            });
             step.mLinearLayout.setBackgroundColor(getColor(R.color.GBText));
             step.mViewPosition.setTextColor(getColor(R.color.White));
             step.mViewAdresse.setTextColor(getColor(R.color.GBScreen));

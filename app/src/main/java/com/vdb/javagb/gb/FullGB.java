@@ -1,15 +1,11 @@
 //
 // FullGB sert de classe parent pour le truc android
 //
-package com.vdb.javagb.Activities.gb;
+package com.vdb.javagb.gb;
 
-import android.content.Context;
-
-import com.vdb.javagb.Activities.gb.cpu.*;
-import com.vdb.javagb.Activities.gb.memory.*;
-import com.vdb.javagb.Activities.gb.memory.Ram;
-
-import java.io.IOException;
+import com.vdb.javagb.gb.cpu.*;
+import com.vdb.javagb.gb.memory.*;
+import com.vdb.javagb.gb.memory.Ram;
 
 public class FullGB{
     protected boolean[] breakpoints = new boolean[0xFFFF];

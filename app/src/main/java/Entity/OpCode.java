@@ -1,7 +1,7 @@
 package Entity;
 
 public class OpCode {
-    private String code;
+    private String[] code;
     private Boolean selected = false;
     private Boolean checking = false;
     private int address = -1;
@@ -9,15 +9,15 @@ public class OpCode {
 
     public OpCode(){}
 
-    public OpCode(String str) {
+    public OpCode(String[] str) {
         this.code = str;
     }
 
-    public String getCode() {
+    public String[] getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(String[] code) {
         this.code = code;
     }
 

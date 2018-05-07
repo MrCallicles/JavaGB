@@ -1,7 +1,5 @@
-package com.vdb.javagb.Activities.gb.memory;
+package com.vdb.javagb.gb.memory;
 
-import android.content.Context;
-import android.net.Uri;
 import android.util.Log;
 
 import java.io.DataInputStream;
@@ -9,8 +7,6 @@ import java.io.FileInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 public class Ram{
     private int[] ram = new int[0xFFFF];

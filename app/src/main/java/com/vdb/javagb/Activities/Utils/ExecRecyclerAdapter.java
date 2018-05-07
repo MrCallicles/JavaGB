@@ -5,13 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.vdb.javagb.Activities.gb.FullGB;
+import com.vdb.javagb.gb.FullGB;
 import com.vdb.javagb.R;
 
 import java.util.List;
@@ -67,13 +65,14 @@ public class ExecRecyclerAdapter extends RecyclerView.Adapter<ExecRecyclerAdapte
         final OpCode opCode = mDataset.get(position);
         holder.mViewPosition.setText(""+opCode.getPosition());
         holder.mViewAdresse.setText(""+opCode.getAddress());
-        holder.mViewHexa.setText(opCode.getHexa_id());
-        holder.mViewInstruction.setText(opCode.getInstruction().getLibelle());
+        holder.mViewHexa.setText("missing");
+        holder.mViewInstruction.setText(opCode.getCode()[1]);
         holder.mViewOperator.setText(
-                (opCode.getOperatorSrc() != null) ? opCode.getOperatorSrc().getLibelle() + ((opCode.getOperatorBut() != null) ? " > "+opCode.getOperatorBut().getLibelle() : ""): ""
+                (!opCode.getCode()[2].isEmpty()) ? opCode.getCode()[2] + ((!opCode.getCode()[3].isEmpty()) ? " > "+opCode.getCode()[3] : ""): ""
         );
 
         holder.mButtonBreakpoint.setOnClickListener(null);
+        holder.mViewInstruction.setOnClickListener(null);
         holder.mLinearLayout.setBackground(null);
         holder.mViewPosition.setTextColor(mContext.getColor(R.color.GBGrey));
         holder.mViewAdresse.setTextColor(mContext.getColor(R.color.GBText));
@@ -82,6 +81,12 @@ public class ExecRecyclerAdapter extends RecyclerView.Adapter<ExecRecyclerAdapte
         holder.mViewOperator.setTextColor(mContext.getColor(R.color.GBText));
 
         if (opCode != null && opCode.isChecking()){
+            holder.mViewInstruction.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mFullGB.showRegisters();
+                }
+            });
             holder.mLinearLayout.setBackgroundColor(mContext.getColor(R.color.GBText));
             holder.mViewPosition.setTextColor(mContext.getColor(R.color.GBScreen));
             holder.mViewAdresse.setTextColor(mContext.getColor(R.color.GBScreen));

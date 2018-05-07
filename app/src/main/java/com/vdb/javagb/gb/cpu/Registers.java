@@ -6,9 +6,9 @@
 // AF, DE, HL
 // Inclue aussi le registre Flag
 //
-package com.vdb.javagb.Activities.gb.cpu;
+package com.vdb.javagb.gb.cpu;
 
-import static com.vdb.javagb.Activities.gb.cpu.Utils.setBit;
+import static com.vdb.javagb.gb.cpu.Utils.setBit;
 
 public class Registers{
     private int a,b,c,d,e,h,l;
