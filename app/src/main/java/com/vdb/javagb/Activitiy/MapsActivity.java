@@ -1,4 +1,4 @@
-package com.vdb.javagb.Activities;
+package com.vdb.javagb.Activitiy;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;

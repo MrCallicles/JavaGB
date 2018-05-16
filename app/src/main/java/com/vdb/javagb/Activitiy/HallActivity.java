@@ -1,8 +1,9 @@
-package com.vdb.javagb.Activities;
+package com.vdb.javagb.Activitiy;
 
 import android.Manifest;
 import android.app.Activity;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 
@@ -20,7 +21,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.text.InputType;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -41,8 +41,6 @@ import android.widget.Toast;
 
 import com.vdb.javagb.R;
 
-import java.io.File;
-
 public class HallActivity extends AppCompatActivity {
     private String pathRom;
     private String filename;
@@ -58,19 +56,21 @@ public class HallActivity extends AppCompatActivity {
 
         Toolbar appToolbar = findViewById(R.id.app_toolbar);
         setSupportActionBar(appToolbar);
-        getSupportActionBar().setTitle("JavaGB");
+        getSupportActionBar().setTitle(R.string.app_name);
 
+        pathRom = "";
         txtViewHall = findViewById(R.id.textViewScreen);
-
-        //showData();
-
-        String path = Environment.getExternalStorageDirectory().toString();
 
         ImageButton imageButtonDebug = (ImageButton)findViewById(R.id.imageButtonDebug);
         imageButtonDebug.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //if (pathRom.isEmpty())return;
+                if (pathRom.isEmpty()){
+                    Toast.makeText(getApplicationContext(), R.string.toastMissingRom,
+                            Toast.LENGTH_SHORT)
+                            .show();
+                    return;
+                }
                 Intent intent = new Intent(HallActivity.this, DebuggerActivity.class);
                 intent.putExtra("pathRom", pathRom);
                 startActivity(intent);
@@ -95,7 +95,6 @@ public class HallActivity extends AppCompatActivity {
             Uri uri = null;
             if (resultData != null) {
                 uri = resultData.getData();
-                String mimeType = getContentResolver().getType(uri);
 
                 Cursor returnCursor = getContentResolver().query(uri, null, null, null, null);
                 int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
@@ -105,19 +104,10 @@ public class HallActivity extends AppCompatActivity {
                 filename = filename.replace('(', '"');
                 filename = filename.replace(')', '"');
                 filename = filename.replace(".gb", "");
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
 
-
-                if ("primary".equalsIgnoreCase(type)) {
-                    pathRom = Environment.getExternalStorageDirectory() + "/" + split[1];
-                }
-                String size = Long.toString(returnCursor.getLong(sizeIndex));
+                pathRom = getPath(this, uri);
 
                 Log.i("Uri", "Uri: " + uri.toString());
-                //pathRom = resultData.getDataString();
-                File f = new File(pathRom);
 
                 txtViewHall.setText(getString(R.string.text_screen));
                 txtViewHall.setText(txtViewHall.getText()+"\n\n\n"+filename);
@@ -175,7 +165,7 @@ public class HallActivity extends AppCompatActivity {
         try {
             startActivityForResult(intent, READ_REQUEST_CODE);
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(getApplicationContext(), "No suitable File Manager was found.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toastNoFileManager, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -184,7 +174,7 @@ public class HallActivity extends AppCompatActivity {
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            Toast.makeText(this, "Permission missing",
+            Toast.makeText(this, R.string.toastMissingPermission,
                     Toast.LENGTH_SHORT)
                     .show();
             // Permission is not granted
@@ -194,7 +184,7 @@ public class HallActivity extends AppCompatActivity {
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
-                Snackbar.make(txtViewHall, "Accès requis",
+                Snackbar.make(txtViewHall, R.string.snackbarRequiredAccess,
                         Snackbar.LENGTH_INDEFINITE).setAction("ok", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -215,7 +205,7 @@ public class HallActivity extends AppCompatActivity {
                 // result of the request.
             }
         } else {
-            Toast.makeText(this, "Permission granted",
+            Toast.makeText(this, R.string.toastGrantedPermission,
                     Toast.LENGTH_SHORT)
                     .show();
             performFileSearch();
@@ -249,6 +239,91 @@ public class HallActivity extends AppCompatActivity {
         });
 
         popupWindow.showAtLocation(findViewById(R.id.app_toolbar), Gravity.CENTER,0,0);
+    }
+
+    private static String getPath(Context context, Uri uri) {
+        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+
+        // DocumentProvider
+        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+            // ExternalStorageProvider
+            if (isExternalStorageDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                if ("primary".equalsIgnoreCase(type)) {
+                    return Environment.getExternalStorageDirectory() + "/" + split[1];
+                } else if ("home".equalsIgnoreCase(type)) {
+                    return Environment.getExternalStorageDirectory() + "/Documents/" + split[1];
+                }
+                // TODO handle non-primary volumes
+            }
+            // DownloadsProvider
+            else if (isDownloadsDocument(uri)) {
+                final String id = DocumentsContract.getDocumentId(uri);
+                final Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                return getDataColumn(context, contentUri, null, null);
+            }
+
+        }
+        // MediaStore (and general)
+        else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            // Return the remote address
+            if (isGooglePhotosUri(uri))
+                return uri.getLastPathSegment();
+            return getDataColumn(context, uri, null, null);
+        }
+        // File
+        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+        return null;
+    }
+
+    public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
+        Cursor cursor = null;
+        final String column = "_data";
+        final String[] projection = { column };
+        try {
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                final int index = cursor.getColumnIndexOrThrow(column);
+                return cursor.getString(index);
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return null;
+    }
+
+    public static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is DownloadsProvider.
+     */
+    public static boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is MediaProvider.
+     */
+    public static boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is Google Photos.
+     */
+    public static boolean isGooglePhotosUri(Uri uri) {
+        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 
     protected int dp2px(int dp, Context context){

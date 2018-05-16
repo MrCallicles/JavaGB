@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">JavaGB</string>
+    <string name="browse_file">Rechercher un fichier</string>
+    <string name="text_screen">JavaGB\n\nSelectionnez votre ROM de GameBoy</string>
+    <string name="breakpoint">Breakpoint</string>
+    <string name="title_activity_maps">Carte</string>
+    <string name="editLatitude">Latitude</string>
+    <string name="editLongitude">Longitude</string>
+    <string name="buttonInfo">Info</string>
+    <string name="buttonStep">Etape</string>
+    <string name="buttonRun">Lancer</string>
+    <string name="itemMap">Carte Google</string>
+    <string name="buttonSelect">SELECT</string>
+    <string name="toastMissingPermission">Permission manquante</string>
+    <string name="toastNoFileManager">Aucun gestionnaire de fichier trouvé.</string>
+    <string name="snackbarRequiredAccess">Accès requis</string>
+    <string name="toastGrantedPermission">Permission accordée</string>
+    <string name="toastMissingRom">Veuillez sélectionner une ROM</string>
+</resources>

@@ -1,18 +1,20 @@
 package com.vdb.javagb.gb;
 
-import com.vdb.javagb.gb.cpu.*;
+import android.util.Log;
+
 import com.vdb.javagb.gb.memory.Ram;
 
 import java.util.ArrayList;
 
 public class Decompiler{
     private Ram _memory;
-    private Registers registers;
     private int pc;
     private int instruction;
+    private int currentPC;
 
-    public Decompiler(Ram ram){
+    Decompiler(Ram ram){
         this.pc = 0;
+        this.currentPC = 0;
         this.instruction = 0;
         this._memory = ram;
     }
@@ -30,9 +32,10 @@ public class Decompiler{
     }
 
     public ArrayList<String[]> decompileRom(){
-        ArrayList<String[]> tmp = new ArrayList();
+        ArrayList<String[]> tmp = new ArrayList<>();
         this.loadInstruction();
         for(int i = 0; i < 0x7FFF; i++){
+            this.currentPC = this.pc;
             tmp.add(decompileInstruction());
             this.incrementPC();
             this.loadInstruction();
@@ -44,13 +47,13 @@ public class Decompiler{
     //de paramètre, on peut toujours modifier la construction
     //plus tard
     private String[] consOpcode(String mnemo, String opA, String opB){
-        return new String[] {String.valueOf(this.pc), mnemo, opA, opB};
+        return new String[] {String.valueOf(this.currentPC), mnemo, opA, opB};
     }
     private String[] consOpcode(String mnemo, String op){
-        return new String[] {String.valueOf(this.pc), mnemo, op, ""};
+        return new String[] {String.valueOf(this.currentPC), mnemo, op, ""};
     }
     private String[] consOpcode(String mnemo){
-        return new String[] {String.valueOf(this.pc), mnemo, "", ""};
+        return new String[] {String.valueOf(this.currentPC), mnemo, "", ""};
     }
 
     private String opOctet(){
@@ -65,7 +68,7 @@ public class Decompiler{
         return "0x" + acc + formatHexa(_memory.getByte(this.pc));
     }
 
-    public String[] decompileInstruction(){
+    private String[] decompileInstruction(){
         switch(this.instruction){
             case 0x00: return consOpcode("NOP");
             case 0x01: return consOpcode("LD", "BC", opWord());
@@ -327,7 +330,7 @@ public class Decompiler{
         }
     }
 
-    public String[] StringDecompileInnerInstruction(){
+    private String[] StringDecompileInnerInstruction(){
         this.incrementPC();
         this.loadInstruction();
         switch(this.instruction) {

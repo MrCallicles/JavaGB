@@ -1,9 +1,19 @@
 <resources>
     <string name="app_name">JavaGB</string>
     <string name="browse_file">Browse file</string>
-    <string name="text_screen">JavaGB\n\nSelectionnez une ROM de GameBoy</string>
-    <string name="breakpoint">breakpoint</string>
-    <string name="search_title">Rechercher</string>
-    <string name="search_hint">0x31</string>
+    <string name="text_screen">JavaGB\n\nSelect your GameBoy ROM</string>
+    <string name="breakpoint">Breakpoint</string>
     <string name="title_activity_maps">Map</string>
+    <string name="editLatitude">Latitude</string>
+    <string name="editLongitude">Longitude</string>
+    <string name="buttonInfo">Info</string>
+    <string name="buttonStep">Step</string>
+    <string name="buttonRun">Run</string>
+    <string name="itemMap">Google Map</string>
+    <string name="buttonSelect">SELECT</string>
+    <string name="toastMissingPermission">Permission missing</string>
+    <string name="toastNoFileManager">No suitable File Manager was found.</string>
+    <string name="snackbarRequiredAccess">Access Required</string>
+    <string name="toastGrantedPermission">Permission granted</string>
+    <string name="toastMissingRom">Please first select a ROM</string>
 </resources>

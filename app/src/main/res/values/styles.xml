@@ -9,6 +9,12 @@
         <item name="android:textColor">@color/GBText</item>
     </style>
 
+    <style name="ToolbarTheme" parent="AppTheme">
+        <item name="android:textColorPrimary">@color/GBText</item>
+        <item name="android:textColorSecondary">@color/GBText</item>
+        <item name="android:textColor">@color/GBText</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

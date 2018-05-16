@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/Black"
-    tools:context=".Activities.HallActivity">
+    tools:context=".Activitiy.HallActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -22,8 +22,8 @@
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:title="@string/app_name"
-            app:titleTextColor="@color/GBText"
-            app:subtitleTextColor="@color/GBText"/>
+            app:itemTextColor="@color/GBText"
+            app:theme="@style/ToolbarTheme"/>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -55,7 +55,7 @@
             android:layout_marginBottom="92dp"
             android:layout_marginStart="96dp"
             android:gravity="center"
-            android:text="SELECT"
+            android:text="@string/buttonSelect"
             android:textSize="10sp"
             android:theme="@style/AppTheme.Text"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -6,16 +6,16 @@
     <item
         android:id="@+id/action_info"
         android:orderInCategory="300"
-        android:title="Info"
+        android:title="@string/buttonInfo"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_next"
         android:orderInCategory="200"
-        android:title="Next"
+        android:title="@string/buttonStep"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_run"
         android:orderInCategory="100"
-        android:title="Run"
+        android:title="@string/buttonRun"
         app:showAsAction="never" />
 </menu>

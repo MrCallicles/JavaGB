@@ -14,13 +14,13 @@ public class FullGB{
     public Registers registers;
     public ExecCpu cpu;
     public InfoRom infos;
+    public boolean cursorBreaker;
 
     public FullGB(int[] testRom){
         ram = new Ram();
-        decompiler = new Decompiler(ram);
         registers = new Registers();
         ram.loadRomArray(testRom);
-
+        decompiler = new Decompiler(ram);
         cpu = new ExecCpu(ram, registers);
         infos = new InfoRom(ram);
 
@@ -29,9 +29,9 @@ public class FullGB{
 
     public FullGB(String pathRom) {
         ram = new Ram();
-        decompiler = new Decompiler(ram);
         registers = new Registers();
         ram.loadRomFile(pathRom);
+        decompiler = new Decompiler(ram);
         cpu = new ExecCpu(ram, registers);
         infos = new InfoRom(ram);
 
@@ -64,13 +64,15 @@ public class FullGB{
         //return true when
         //get a breakpoint
         while(true){
-            if (breakpoints[cpu.getPCAddress()]){
+            if (!cursorBreaker && breakpoints[cpu.getPCAddress()]){
                 //break
                 System.out.format("break at %02x\n",
                         cpu.getPCAddress());
+                cursorBreaker = true;
                 return cpu.getPCAddress();
             }
             cpu.execInstruction();
+            cursorBreaker = false;
         }
     }
 
@@ -104,27 +106,27 @@ public class FullGB{
         return dump;
     }
 
-    public int[] dumpRegisters(){
-        int[] dump = new int[15];
-        dump[0] = registers.getA();
-        dump[1] = registers.getB();
-        dump[2] = registers.getC();
-        dump[3] = registers.getD();
-        dump[4] = registers.getE();
-        dump[5] = registers.getH();
-        dump[6] = registers.getL();
-        dump[7] = registers.getPC();
-        dump[8] = registers.getSP();
-        dump[9] = registers.getAF();
-        dump[10] = registers.getBC();
-        dump[11] = registers.getDE();
-        dump[12] = registers.getHL();
-        dump[13] = registers.getFlags();
+    public String[] dumpRegisters(){
+        String[] dump = new String[15];
+        dump[0] = "A         : "+String.format("0x%02x", registers.getA())+"\n";
+        dump[1] = "B         : "+String.format("0x%02x", registers.getB())+"\n";
+        dump[2] = "C         : "+String.format("0x%02x", registers.getC())+"\n";
+        dump[3] = "D         : "+String.format("0x%02x", registers.getD())+"\n";
+        dump[4] = "E         : "+String.format("0x%02x", registers.getE())+"\n";
+        dump[5] = "H         : "+String.format("0x%02x", registers.getH())+"\n";
+        dump[6] = "L         : "+String.format("0x%02x", registers.getL())+"\n\n";
+        dump[7] = "PC       : "+String.format("0x%04x", registers.getPC())+"\n";
+        dump[8] = "SP       : "+String.format("0x%04x", registers.getSP())+"\n";
+        dump[9] = "AF       : "+String.format("0x%04x", registers.getAF())+"\n";
+        dump[10] = "BC       : "+String.format("0x%04x", registers.getBC())+"\n";
+        dump[11] = "DE       : "+String.format("0x%04x", registers.getDE())+"\n";
+        dump[12] = "HL       : "+String.format("0x%04x", registers.getHL())+"\n\n";
+        dump[13] = "Flags : "+ String.format("0x%02x",registers.getFlags())+"\n";
         if(registers.getIME()) {
-            dump[14] = 1;
+            dump[14] = "IME     : 0x0"+1;
         }
         else {
-            dump[14] = 0;
+            dump[14] = "IME     : 0x0"+0;
         }
         return dump;
     }

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="0dp"
-    android:background="@color/Black"
+    android:background="@color/GBBlackHalf"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="32dp"
@@ -19,42 +19,22 @@
         android:layout_marginBottom="32dp"
         android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/edtLatitude"
+        <TextView
+            android:id="@+id/textViewRegisters"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/GBScreen"
-            android:ems="10"
             android:fontFamily="@font/game_boy"
-            android:hint="@string/editLatitude"
-            android:inputType="number"
-            android:padding="8dp"
-            android:textAlignment="center"
-            android:textColor="@color/GBText"
-            android:textColorHint="@color/GBText"
-            android:textSize="8sp" />
-
-        <EditText
-            android:id="@+id/edtLongitude"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/GBScreen"
-            android:ems="10"
-            android:fontFamily="@font/game_boy"
-            android:hint="@string/editLongitude"
-            android:inputType="number"
-            android:padding="8dp"
-            android:textAlignment="center"
-            android:textColor="@color/GBText"
-            android:textColorHint="@color/GBText"
+            android:paddingHorizontal="32dp"
+            android:paddingVertical="16dp"
+            android:textAlignment="textStart"
             android:textSize="8sp" />
 
     </LinearLayout>
 
     <ImageButton
-        android:id="@+id/imageButtonLocate"
+        android:id="@+id/imageButtonHide"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_marginBottom="8dp"
@@ -63,6 +43,6 @@
         android:layout_marginTop="8dp"
         android:background="@color/Transparent"
         android:padding="8dp"
-        android:src="@drawable/ic_location_on_purple48dp" />
+        android:src="@drawable/ic_keyboard_arrow_up_black_24dp" />
 
 </LinearLayout>

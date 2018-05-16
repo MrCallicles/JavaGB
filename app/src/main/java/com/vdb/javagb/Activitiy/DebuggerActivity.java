@@ -1,13 +1,21 @@
-package com.vdb.javagb.Activities;
+package com.vdb.javagb.Activitiy;
 
+import android.content.Context;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
-import com.vdb.javagb.Activities.Utils.ExecRecyclerAdapter;
+import com.vdb.javagb.Utility.ExecRecyclerAdapter;
 import com.vdb.javagb.gb.Decompiler;
 import com.vdb.javagb.gb.FullGB;
 import com.vdb.javagb.gb.memory.TestRom;
@@ -16,7 +24,7 @@ import com.vdb.javagb.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import Entity.OpCode;
+import com.vdb.javagb.Entity.OpCode;
 
 public class DebuggerActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
@@ -50,7 +58,7 @@ public class DebuggerActivity extends AppCompatActivity {
             }
         });
 
-        ImageView buttonRun = (ImageView)findViewById(R.id.buttonRun);
+        ImageView buttonRun = findViewById(R.id.buttonRun);
         buttonRun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,14 +67,21 @@ public class DebuggerActivity extends AppCompatActivity {
             }
         });
 
-        ImageView buttonStep = (ImageView)findViewById(R.id.buttonStep);
+        ImageView buttonStep = findViewById(R.id.buttonStep);
         buttonStep.setOnClickListener(new View.OnClickListener() {
-            private boolean cb;
-
             @Override
             public void onClick(View view) {
                 currentAddress = mFullGb.step();
                 setPositionView();
+            }
+        });
+
+        ImageView buttonInfos = findViewById(R.id.buttonInfos);
+        buttonInfos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mFullGb.showRegisters();
+                popupWindow();
             }
         });
     }
@@ -76,7 +91,6 @@ public class DebuggerActivity extends AppCompatActivity {
 
         mOpCodes = new ArrayList<>();
         ArrayList<String[]> ramor = mDecompiler.decompileRom();
-        boolean cb = false;
 
         int p = 0;
         for (String[] ts : ramor){
@@ -86,7 +100,6 @@ public class DebuggerActivity extends AppCompatActivity {
             mOpCodes.add(opCode);
             p++;
         }
-
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewDebug);
         mRecyclerView.setHasFixedSize(true);
@@ -131,7 +144,6 @@ public class DebuggerActivity extends AppCompatActivity {
             step.mLinearLayout.setBackgroundColor(getColor(R.color.Transparent));
             step.mViewPosition.setTextColor(getColor(R.color.GBGrey));
             step.mViewAdresse.setTextColor(getColor(R.color.GBText));
-            step.mViewHexa.setTextColor(getColor(R.color.GBText));
             step.mViewInstruction.setTextColor(getColor(R.color.GBText));
             step.mViewOperator.setTextColor(getColor(R.color.GBText));
             mOpCodes.get(previousPosition).setChecking(false);
@@ -147,11 +159,37 @@ public class DebuggerActivity extends AppCompatActivity {
             step.mLinearLayout.setBackgroundColor(getColor(R.color.GBText));
             step.mViewPosition.setTextColor(getColor(R.color.White));
             step.mViewAdresse.setTextColor(getColor(R.color.GBScreen));
-            step.mViewHexa.setTextColor(getColor(R.color.GBScreen));
             step.mViewInstruction.setTextColor(getColor(R.color.GBScreen));
             step.mViewOperator.setTextColor(getColor(R.color.GBScreen));
             mOpCodes.get(currentPosition).setChecking(true);
             previousPosition = step.getAdapterPosition();
         }
+    }
+
+    private void popupWindow(){
+        final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.popup_registers, null);
+        final PopupWindow popupWindow = new PopupWindow(linearLayout, LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT, true);
+
+        if(Build.VERSION.SDK_INT>=21){
+            popupWindow.setAnimationStyle(R.style.AnimationPopup);
+            popupWindow.setElevation(5.0f);
+        }
+
+        final TextView textViewRegisters = linearLayout.findViewById(R.id.textViewRegisters);
+        for (String c:mFullGb.dumpRegisters()){
+            textViewRegisters.setText(textViewRegisters.getText() + c);
+        }
+
+        ImageButton buttonHide = (ImageButton) linearLayout.findViewById(R.id.imageButtonHide);
+        buttonHide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popupWindow.dismiss();
+            }
+        });
+
+        popupWindow.showAtLocation(findViewById(R.id.buttonInfos), Gravity.CENTER,0,0);
     }
 }

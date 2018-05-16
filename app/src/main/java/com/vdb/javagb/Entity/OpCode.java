@@ -1,4 +1,4 @@
-package Entity;
+package com.vdb.javagb.Entity;
 
 public class OpCode {
     private String[] code;

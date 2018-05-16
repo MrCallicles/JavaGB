@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Activities.DebuggerActivity">
+    tools:context=".Activitiy.DebuggerActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewDebug"
@@ -28,11 +28,13 @@
 
 
             <ImageView
-                android:id="@+id/buttonBack"
+                android:id="@+id/buttonInfos"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_margin="8dp"
-                app:srcCompat="@drawable/circle_button" />
+                android:padding="12dp"
+                android:src="@drawable/ic_memory_white_24dp"
+                android:background="@drawable/circle_button" />
 
         </LinearLayout>
 
@@ -49,7 +51,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_margin="8dp"
-                android:padding="16dp"
+                android:padding="12dp"
                 android:src="@drawable/ic_play_arrow_black_24dp"
                 android:background="@drawable/circle_button" />
         </LinearLayout>
@@ -67,7 +69,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_margin="8dp"
-                android:padding="16dp"
+                android:padding="12dp"
                 android:src="@drawable/ic_redo_black_24dp"
                 android:background="@drawable/circle_button" />
         </LinearLayout>

@@ -1,4 +1,4 @@
-package com.vdb.javagb.Activities.Utils;
+package com.vdb.javagb.Utility;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +14,7 @@ import com.vdb.javagb.R;
 
 import java.util.List;
 
-import Entity.OpCode;
+import com.vdb.javagb.Entity.OpCode;
 
 public class ExecRecyclerAdapter extends RecyclerView.Adapter<ExecRecyclerAdapter.ViewHolder> {
     private List<OpCode> mDataset;
@@ -26,7 +26,6 @@ public class ExecRecyclerAdapter extends RecyclerView.Adapter<ExecRecyclerAdapte
         public ImageView mButtonBreakpoint;
         public TextView mViewPosition;
         public TextView mViewAdresse;
-        public TextView mViewHexa;
         public TextView mViewInstruction;
         public TextView mViewOperator;
         public ViewGroup mParent;
@@ -37,7 +36,6 @@ public class ExecRecyclerAdapter extends RecyclerView.Adapter<ExecRecyclerAdapte
             mButtonBreakpoint = (ImageView) mLinearLayout.findViewById(R.id.buttonBreakpoint);
             mViewPosition = (TextView) mLinearLayout.findViewById(R.id.textViewPosition);
             mViewAdresse = (TextView) mLinearLayout.findViewById(R.id.textViewAdresse);
-            mViewHexa = (TextView) mLinearLayout.findViewById(R.id.textViewHexa);
             mViewInstruction = (TextView) mLinearLayout.findViewById((R.id.textViewInstruction));
             mViewOperator = (TextView) mLinearLayout.findViewById((R.id.textViewOperateurs));
             mParent = parent;
@@ -64,8 +62,7 @@ public class ExecRecyclerAdapter extends RecyclerView.Adapter<ExecRecyclerAdapte
 
         final OpCode opCode = mDataset.get(position);
         holder.mViewPosition.setText(""+opCode.getPosition());
-        holder.mViewAdresse.setText(""+opCode.getAddress());
-        holder.mViewHexa.setText("missing");
+        holder.mViewAdresse.setText(String.format("0x%04x", opCode.getAddress()));
         holder.mViewInstruction.setText(opCode.getCode()[1]);
         holder.mViewOperator.setText(
                 (!opCode.getCode()[2].isEmpty()) ? opCode.getCode()[2] + ((!opCode.getCode()[3].isEmpty()) ? " > "+opCode.getCode()[3] : ""): ""
@@ -76,7 +73,6 @@ public class ExecRecyclerAdapter extends RecyclerView.Adapter<ExecRecyclerAdapte
         holder.mLinearLayout.setBackground(null);
         holder.mViewPosition.setTextColor(mContext.getColor(R.color.GBGrey));
         holder.mViewAdresse.setTextColor(mContext.getColor(R.color.GBText));
-        holder.mViewHexa.setTextColor(mContext.getColor(R.color.GBText));
         holder.mViewInstruction.setTextColor(mContext.getColor(R.color.GBText));
         holder.mViewOperator.setTextColor(mContext.getColor(R.color.GBText));
 
@@ -90,7 +86,6 @@ public class ExecRecyclerAdapter extends RecyclerView.Adapter<ExecRecyclerAdapte
             holder.mLinearLayout.setBackgroundColor(mContext.getColor(R.color.GBText));
             holder.mViewPosition.setTextColor(mContext.getColor(R.color.GBScreen));
             holder.mViewAdresse.setTextColor(mContext.getColor(R.color.GBScreen));
-            holder.mViewHexa.setTextColor(mContext.getColor(R.color.GBScreen));
             holder.mViewInstruction.setTextColor(mContext.getColor(R.color.GBScreen));
             holder.mViewOperator.setTextColor(mContext.getColor(R.color.GBScreen));
         }
@@ -108,9 +103,9 @@ public class ExecRecyclerAdapter extends RecyclerView.Adapter<ExecRecyclerAdapte
                     opCode.toggle();
                     if (opCode.isSelected()){
                         holder.mButtonBreakpoint.setBackground(mContext.getDrawable(R.drawable.breakpoint));
-                        mFullGB.addBreakpoint(position);
+                        mFullGB.addBreakpoint(opCode.getAddress());
                     } else {
-                        mFullGB.clearBreakpoint(position);
+                        mFullGB.clearBreakpoint(opCode.getAddress());
                     }
                 }
             }

@@ -84,11 +84,11 @@ public class Ram{
             //this.romSize = rom.length;
             if(rom.length > n){
                 for(int i = 0; i < n; i++){
-                    ram[i] = (int)rom[i];
+                    ram[i] = rom[i] & 0xFF;
                 }
             }else{
                 for(int i = 0; i < rom.length; i++){
-                    ram[i] = (int)rom[i];
+                    ram[i] = rom[i] & 0xFF;
                 }
             }
             fileIn.close();
