@@ -143,9 +143,9 @@ public class DebuggerActivity extends AppCompatActivity {
             step.mLinearLayout.setOnClickListener(null);
             step.mLinearLayout.setBackgroundColor(getColor(R.color.Transparent));
             step.mViewPosition.setTextColor(getColor(R.color.GBGrey));
-            step.mViewAdresse.setTextColor(getColor(R.color.GBText));
-            step.mViewInstruction.setTextColor(getColor(R.color.GBText));
-            step.mViewOperator.setTextColor(getColor(R.color.GBText));
+            step.mViewAdresse.setTextColor(getColor(R.color.GBGrey));
+            step.mViewInstruction.setTextColor(getColor(R.color.GBGrey));
+            step.mViewOperator.setTextColor(getColor(R.color.GBGrey));
             mOpCodes.get(previousPosition).setChecking(false);
         }
         step = (ExecRecyclerAdapter.ViewHolder) mRecyclerView.findViewHolderForAdapterPosition(currentPosition);
@@ -156,11 +156,11 @@ public class DebuggerActivity extends AppCompatActivity {
                     mFullGb.showRegisters();
                 }
             });
-            step.mLinearLayout.setBackgroundColor(getColor(R.color.GBText));
-            step.mViewPosition.setTextColor(getColor(R.color.White));
-            step.mViewAdresse.setTextColor(getColor(R.color.GBScreen));
-            step.mViewInstruction.setTextColor(getColor(R.color.GBScreen));
-            step.mViewOperator.setTextColor(getColor(R.color.GBScreen));
+            step.mLinearLayout.setBackgroundColor(getColor(R.color.GBScreen));
+            step.mViewPosition.setTextColor(getColor(R.color.GBText));
+            step.mViewAdresse.setTextColor(getColor(R.color.GBText));
+            step.mViewInstruction.setTextColor(getColor(R.color.GBText));
+            step.mViewOperator.setTextColor(getColor(R.color.GBText));
             mOpCodes.get(currentPosition).setChecking(true);
             previousPosition = step.getAdapterPosition();
         }

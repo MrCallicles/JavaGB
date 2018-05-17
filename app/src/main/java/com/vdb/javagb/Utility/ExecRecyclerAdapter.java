@@ -72,9 +72,9 @@ public class ExecRecyclerAdapter extends RecyclerView.Adapter<ExecRecyclerAdapte
         holder.mViewInstruction.setOnClickListener(null);
         holder.mLinearLayout.setBackground(null);
         holder.mViewPosition.setTextColor(mContext.getColor(R.color.GBGrey));
-        holder.mViewAdresse.setTextColor(mContext.getColor(R.color.GBText));
-        holder.mViewInstruction.setTextColor(mContext.getColor(R.color.GBText));
-        holder.mViewOperator.setTextColor(mContext.getColor(R.color.GBText));
+        holder.mViewAdresse.setTextColor(mContext.getColor(R.color.GBGrey));
+        holder.mViewInstruction.setTextColor(mContext.getColor(R.color.GBGrey));
+        holder.mViewOperator.setTextColor(mContext.getColor(R.color.GBGrey));
 
         if (opCode != null && opCode.isChecking()){
             holder.mViewInstruction.setOnClickListener(new View.OnClickListener() {
@@ -83,11 +83,11 @@ public class ExecRecyclerAdapter extends RecyclerView.Adapter<ExecRecyclerAdapte
                     mFullGB.showRegisters();
                 }
             });
-            holder.mLinearLayout.setBackgroundColor(mContext.getColor(R.color.GBText));
-            holder.mViewPosition.setTextColor(mContext.getColor(R.color.GBScreen));
-            holder.mViewAdresse.setTextColor(mContext.getColor(R.color.GBScreen));
-            holder.mViewInstruction.setTextColor(mContext.getColor(R.color.GBScreen));
-            holder.mViewOperator.setTextColor(mContext.getColor(R.color.GBScreen));
+            holder.mLinearLayout.setBackgroundColor(mContext.getColor(R.color.GBScreen));
+            holder.mViewPosition.setTextColor(mContext.getColor(R.color.GBText));
+            holder.mViewAdresse.setTextColor(mContext.getColor(R.color.GBText));
+            holder.mViewInstruction.setTextColor(mContext.getColor(R.color.GBText));
+            holder.mViewOperator.setTextColor(mContext.getColor(R.color.GBText));
         }
 
         if (opCode != null && opCode.isSelected())

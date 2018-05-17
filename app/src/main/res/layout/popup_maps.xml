@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="0dp"
-    android:background="@color/Black"
+    android:background="@color/GBBlackHalf"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="32dp"
@@ -13,23 +13,32 @@
     app:layout_constraintRight_toRightOf="parent"
     app:layout_constraintTop_toTopOf="parent">
 
+    <view
+        class="android.support.v4.view.ViewPager"
+        id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <EditText
             android:id="@+id/edtLatitude"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
             android:layout_weight="1"
             android:background="@color/GBScreen"
             android:ems="10"
             android:fontFamily="@font/game_boy"
             android:hint="@string/editLatitude"
             android:inputType="number"
-            android:padding="8dp"
+            android:numeric="integer"
+            android:padding="16dp"
             android:textAlignment="center"
             android:textColor="@color/GBText"
             android:textColorHint="@color/GBText"
@@ -45,7 +54,8 @@
             android:fontFamily="@font/game_boy"
             android:hint="@string/editLongitude"
             android:inputType="number"
-            android:padding="8dp"
+            android:padding="16dp"
+            android:layout_marginBottom="32dp"
             android:textAlignment="center"
             android:textColor="@color/GBText"
             android:textColorHint="@color/GBText"
@@ -63,6 +73,6 @@
         android:layout_marginTop="8dp"
         android:background="@color/Transparent"
         android:padding="8dp"
-        android:src="@drawable/ic_location_on_purple48dp" />
+        android:src="@drawable/ic_location_on" />
 
 </LinearLayout>

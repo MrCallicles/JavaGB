@@ -33,7 +33,7 @@
                 android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:padding="12dp"
-                android:src="@drawable/ic_memory_white_24dp"
+                android:src="@drawable/ic_memory"
                 android:background="@drawable/circle_button" />
 
         </LinearLayout>
@@ -52,7 +52,7 @@
                 android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:padding="12dp"
-                android:src="@drawable/ic_play_arrow_black_24dp"
+                android:src="@drawable/ic_play_arrow"
                 android:background="@drawable/circle_button" />
         </LinearLayout>
 

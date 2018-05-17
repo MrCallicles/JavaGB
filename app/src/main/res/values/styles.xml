@@ -13,6 +13,7 @@
         <item name="android:textColorPrimary">@color/GBText</item>
         <item name="android:textColorSecondary">@color/GBText</item>
         <item name="android:textColor">@color/GBText</item>
+        <item name="android:itemBackground">@color/colorPrimary</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

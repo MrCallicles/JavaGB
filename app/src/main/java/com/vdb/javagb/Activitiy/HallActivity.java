@@ -31,15 +31,20 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vdb.javagb.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HallActivity extends AppCompatActivity {
     private String pathRom;
